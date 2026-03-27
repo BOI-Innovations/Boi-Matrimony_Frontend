@@ -14,7 +14,8 @@ import {
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { CardTitle, CardDescription } from "@/components/ui/card";
-import bannerImage from "@/images/forgot3img.png";
+import bannerImage from "@/images/banner.png";
+
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
