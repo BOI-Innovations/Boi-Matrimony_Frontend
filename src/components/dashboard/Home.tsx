@@ -826,28 +826,7 @@ const Home = ({ user, onSectionChange }: HomeProps) => {
               />
             );
           })}
-        {/* View More Card */}
-        {!loading && !profileCompletion.incomplete && filteredProfiles.length > 4 && (
-          <Card
-            className="border-0 shadow-medium hover:shadow-large transition-smooth cursor-pointer overflow-hidden"
-            onClick={() => onSectionChange("matches")}
-          >
-            <div className="relative aspect-[8/9] w-full">
-              {filteredProfiles[4]?.avatar ? (
-                <img src={filteredProfiles[4].avatar} alt="View more" className="object-cover w-full h-full filter blur-sm" />
-              ) : (
-                <div className="w-full h-full bg-pink-50 flex items-center justify-center filter blur-sm">
-                  <Users className="w-16 h-16 text-pink-300" />
-                </div>
-              )}
-              <div className="absolute inset-0 flex flex-col items-center justify-center p-3 bg-pink-900/40 text-white">
-                <Button variant="secondary" onClick={(e) => { e.stopPropagation(); onSectionChange("matches"); }}>
-                  View More
-                </Button>
-              </div>
-            </div>
-          </Card>
-        )}
+
       </div>
 
 {/* Samaj Seva Footer Section */}
