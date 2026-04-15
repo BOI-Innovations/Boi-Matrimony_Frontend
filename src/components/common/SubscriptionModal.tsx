@@ -10,9 +10,34 @@ interface SubscriptionModalProps {
 export const SubscriptionModal = ({ isOpen, onClose }: SubscriptionModalProps) => {
   const [loadingPlanId, setLoadingPlanId] = useState<string | null>(null);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [planAmount, setPlanAmount] = useState<number>(2100);
+  const [planCurrency, setPlanCurrency] = useState<string>("INR");
 
   useEffect(() => {
-    if (isOpen) setPaymentSuccess(false);
+    if (isOpen) {
+      setPaymentSuccess(false);
+
+      const token = sessionStorage.getItem("token");
+      const baseUrl = import.meta.env.VITE_API_BASE_URL;
+      if (!token || !baseUrl) return;
+
+      fetch(`${baseUrl}/api/subscription-plans/getSubscriptionPlanById/PLAN_BASIC_1M`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data?.statusCode === 200 && data.payload) {
+            setPlanAmount(data.payload.price ?? 2100);
+            setPlanCurrency(data.payload.currency ?? "INR");
+          }
+        })
+        .catch((error) => {
+          console.error("Failed to load subscription plan:", error);
+        });
+    }
   }, [isOpen]);
 
   if (!isOpen) return null;
@@ -98,15 +123,15 @@ export const SubscriptionModal = ({ isOpen, onClose }: SubscriptionModalProps) =
         name: "Matrimonial App",
         description: planName,
         order_id: orderId,
-        config: {
-          display: {
-            hide: [
-              { method: "emi" },
-              { method: "paylater" },
-              { method: "wallet" },
-            ],
-          },
-        },
+        // config: {
+        //   display: {
+        //     hide: [
+        //       { method: "emi" },
+        //       { method: "paylater" },
+        //       { method: "wallet" },
+        //     ],
+        //   },
+        // },
         handler: async function (response: any) {
           // Verify payment
           const verifyResponse = await fetch(`${baseUrl}/api/payments/verify-payment`, {
@@ -212,7 +237,9 @@ export const SubscriptionModal = ({ isOpen, onClose }: SubscriptionModalProps) =
                   <div className="text-center pb-4 border-b border-[#e6e2db] dark:border-[#3a332a]">
                     <h1 className="text-lg font-bold text-center flex-1 truncate px-2 text-[#181611] dark:text-white">Community Support Membership</h1>
                     <div className="flex items-baseline justify-center gap-1 text-[#eead2b]">
-                      <span className="text-4xl font-extrabold">₹2100</span>
+                      <span className="text-4xl font-extrabold">
+                        {planCurrency === "INR" ? "₹" : `${planCurrency} `}{planAmount}
+                      </span>
                     </div>
                     <p className="text-[#897c61] dark:text-gray-400 text-sm mt-1">One-time payment until you find your life partner</p>
                   </div>
