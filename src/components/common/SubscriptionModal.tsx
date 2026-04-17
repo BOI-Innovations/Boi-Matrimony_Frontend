@@ -123,15 +123,15 @@ export const SubscriptionModal = ({ isOpen, onClose }: SubscriptionModalProps) =
         name: "Matrimonial App",
         description: planName,
         order_id: orderId,
-        // config: {
-        //   display: {
-        //     hide: [
-        //       { method: "emi" },
-        //       { method: "paylater" },
-        //       { method: "wallet" },
-        //     ],
-        //   },
-        // },
+        config: {
+          display: {
+            hide: [
+              { method: "emi" },
+              { method: "paylater" },
+              { method: "wallet" },
+            ],
+          },
+        },
         handler: async function (response: any) {
           // Verify payment
           const verifyResponse = await fetch(`${baseUrl}/api/payments/verify-payment`, {

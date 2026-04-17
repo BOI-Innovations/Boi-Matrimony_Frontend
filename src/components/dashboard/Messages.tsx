@@ -468,7 +468,13 @@ const Messages = () => {
         [selectedConversation]: [...(prev[selectedConversation] || []), tempMessage]
       }));
 
-      setMessageInput('');
+      const input = document.querySelector('input[placeholder="Type your message..."]') as HTMLInputElement;
+      if (input) {
+        setMessageInput('');
+        input.focus();
+      } else {
+        setMessageInput('');
+      }
     }
   };
 
@@ -768,7 +774,7 @@ const Messages = () => {
                           </span>
                         </div>
 
-                        <div className="flex items-center justify-between mt-1">
+                        <div className="flex items-center justify-between">
                           <p className="text-sm text-muted-foreground truncate">
                             {conversation.occupation}
                           </p>

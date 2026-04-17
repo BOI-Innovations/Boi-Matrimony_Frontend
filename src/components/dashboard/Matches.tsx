@@ -88,6 +88,12 @@ const DRINKING_HABITS_OPTIONS = [
   { label: "Doesn't Matter", value: "DOESNT_MATTER" }
 ];
 
+// Age options for filter dropdowns
+const AGE_OPTIONS = Array.from({ length: 53 }, (_, i) => {
+  const age = 18 + i;
+  return { label: age.toString(), value: age.toString() };
+});
+
 const MatchCard = ({ 
   match, 
   connectionInfo, 
@@ -915,6 +921,11 @@ const Matches = ({ onViewProfile }: MatchesProps = {}) => {
       placeholder={placeholder}
       value={value || ""}
       onChange={onChange}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault(); // Prevent dialog from closing
+        }
+      }}
     />
   );
 
@@ -1087,15 +1098,15 @@ const Matches = ({ onViewProfile }: MatchesProps = {}) => {
                   </InputGroup>
                   <InputGroup label="Age Range">
                     <div className="flex gap-2">
-                      <StyledInput 
-                        type="number" 
-                        placeholder="Min" 
+                      <StyledSelect 
+                        placeholder="Min Age" 
+                        options={AGE_OPTIONS} 
                         value={filterData.minAge}
                         onChange={updateFilter("minAge")}
                       />
-                      <StyledInput 
-                        type="number" 
-                        placeholder="Max" 
+                      <StyledSelect 
+                        placeholder="Max Age" 
+                        options={AGE_OPTIONS} 
                         value={filterData.maxAge}
                         onChange={updateFilter("maxAge")}
                       />
