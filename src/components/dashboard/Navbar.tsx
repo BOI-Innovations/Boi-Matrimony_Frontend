@@ -96,7 +96,7 @@ const response = await fetch(`${baseUrl}/api/images/getLoggedUserProfileImage`, 
           <Button
             variant="ghost"
             size="icon"
-            className="lg:hidden"
+            className="hidden"
             onClick={onMobileMenuToggle}
           >
             <Menu className="h-5 w-5" />
