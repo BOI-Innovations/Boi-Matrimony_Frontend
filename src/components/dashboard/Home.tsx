@@ -856,9 +856,9 @@ const Home = ({ user, onSectionChange }: HomeProps) => {
 
         <Button
           className="bg-white text-primary hover:bg-white/90 font-semibold"
-          onClick={() => onSectionChange("partner-preference")}
+          onClick={() => setShowSubscriptionModal(true)}
         >
-          Update Preferences
+          Make a Donation
         </Button>
       </div>
 
