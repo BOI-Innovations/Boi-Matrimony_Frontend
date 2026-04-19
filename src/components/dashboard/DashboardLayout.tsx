@@ -1,7 +1,7 @@
 import { ReactNode, useState } from "react";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
-import { Home, Heart, MessageSquare, User } from "lucide-react";
+import { Home, Heart, MessageSquare, User, Users } from "lucide-react";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -44,7 +44,7 @@ const DashboardLayout = ({ children, activeSection, onSectionChange, autoOpenSub
             onClick={() => onSectionChange("matches")}
             className={`flex flex-col items-center gap-1 ${activeSection === "matches" ? "text-primary" : "text-muted-foreground"} hover:text-primary transition-colors`}
           >
-            <Heart className="w-5 h-5" />
+            <Users className="w-5 h-5" />
             <span className="text-xs">Matches</span>
           </button>
           <button

@@ -15,7 +15,7 @@ interface SidebarProps {
 const Sidebar = ({ activeSection, onSectionChange, isMobileOpen, onMobileOpenChange }: SidebarProps) => {
   const navigate = useNavigate();
   const [isSubscriptionOpen, setIsSubscriptionOpen] = useState(false);
-  
+
   const mainMenuItems = [
     { id: "home", label: "Home", icon: Home },
     { id: "matches", label: "Matches", icon: Users },
@@ -39,10 +39,10 @@ const Sidebar = ({ activeSection, onSectionChange, isMobileOpen, onMobileOpenCha
   ];
 
   const settingsItems = [
-    { id: "subscription", label: "Join the initiative", icon: Crown },
-    { id: "account-settings", label: "Account Settings", icon: Settings },
-    { id: "communication-settings", label: "Communication", icon: Bell },
-    { id: "privacy-settings", label: "Privacy", icon: Shield },
+    { id: "subscription", label: "Make a Donation", icon: Crown },
+    // { id: "account-settings", label: "Account Settings", icon: Settings },
+    // { id: "communication-settings", label: "Communication", icon: Bell },
+    // { id: "privacy-settings", label: "Privacy", icon: Shield },
   ];
 
   const helpItems = [
@@ -63,7 +63,7 @@ const Sidebar = ({ activeSection, onSectionChange, isMobileOpen, onMobileOpenCha
       }
       navigate(`/dashboard?section=${item.id}`);
       onSectionChange(item.id);
-      onMobileOpenChange?.(false); // Close mobile menu on item click
+      onMobileOpenChange?.(false); 
     };
 
     return (
@@ -84,8 +84,7 @@ const Sidebar = ({ activeSection, onSectionChange, isMobileOpen, onMobileOpenCha
 
   const sidebarContent = (
     <div className="p-4 space-y-6">
-      {/* Main Menus */}
-      <div>
+      <div className="hidden lg:block">
         <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-4">
           Main
         </h3>
@@ -96,7 +95,6 @@ const Sidebar = ({ activeSection, onSectionChange, isMobileOpen, onMobileOpenCha
         </div>
       </div>
 
-      {/* Profile Sections */}
       <div>
         <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-4">
           Profile Info
@@ -134,7 +132,7 @@ const Sidebar = ({ activeSection, onSectionChange, isMobileOpen, onMobileOpenCha
       {/* Settings */}
       <div>
         <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-4">
-          Settings
+          Support Us
         </h3>
         <div className="space-y-1">
           {settingsItems.map((item) => (
@@ -144,7 +142,7 @@ const Sidebar = ({ activeSection, onSectionChange, isMobileOpen, onMobileOpenCha
       </div>
 
       {/* Help */}
-      <div>
+      {/* <div className="hidden lg:block">
         <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-4">
           Help
         </h3>
@@ -153,7 +151,7 @@ const Sidebar = ({ activeSection, onSectionChange, isMobileOpen, onMobileOpenCha
             <MenuItem key={item.id} item={item} />
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 
