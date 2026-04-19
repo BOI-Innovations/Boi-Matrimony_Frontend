@@ -309,11 +309,11 @@ const ContactDetails = () => {
       <Card className="border-0 shadow-medium mt-2">
         <CardContent className="space-y-6 pt-6">
           {/* Email */}
-          <div className="flex items-center gap-4 p-4 bg-muted rounded-lg">
-            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+          <div className="flex items-center gap-4 p-4 bg-muted rounded-lg overflow-hidden">
+            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
               <Mail className="w-6 h-6 text-primary" />
             </div>
-            <div className="flex-1">
+            <div className="flex-1 min-w-0">
               <p className="text-sm text-muted-foreground">Email Address (ईमेल पता)</p>
               {editMode ? (
                 <Input
@@ -321,12 +321,12 @@ const ContactDetails = () => {
                   value={contactDetails?.email || ""}
                   onChange={(e) => handleChange("email", e.target.value)}
                   className={cn(
-                    "w-full sm:w-[70%]",
+                    "w-full",
                     validationErrors.has("email") && "border-red-500 border-2 focus:border-red-500"
                   )}
                 />
               ) : (
-                <p className="font-semibold text-lg">{contactDetails?.email || "Not provided"}</p>
+                <p className="font-semibold text-lg break-words">{contactDetails?.email || "Not provided"}</p>
               )}
             </div>
           </div>

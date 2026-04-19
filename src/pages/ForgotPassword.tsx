@@ -172,7 +172,7 @@ const ForgotPassword = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-rose-50 to-rose-100 p-6">
       <div
         className="flex flex-col lg:flex-row w-full max-w-5xl rounded-2xl shadow-xl border border-gray-200 overflow-hidden bg-white animate-fade-in"
-        style={{ maxHeight: "600px" }}
+        style={{ maxHeight: "550px" }}
       >
         {/* LEFT IMAGE SECTION */}
         <div className="hidden lg:flex lg:w-1/2 h-full">

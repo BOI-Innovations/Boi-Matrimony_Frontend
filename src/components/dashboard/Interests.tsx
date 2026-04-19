@@ -623,7 +623,7 @@ const Matches = ({ onViewProfile }: MatchesProps = {}) => {
               onClick={() => setActiveTab("accepted")}
               className="flex-1"
             >
-              Interested
+              Connected
             </Button>
           </div>
         </CardHeader>

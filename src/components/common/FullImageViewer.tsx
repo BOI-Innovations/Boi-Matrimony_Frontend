@@ -1,4 +1,4 @@
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { X } from "lucide-react";
 
 interface FullImageViewerProps {
   imageUrl: string | null;
@@ -13,28 +13,51 @@ const FullImageViewer = ({
   onOpenChange,
   shape = "rectangle",
 }: FullImageViewerProps) => {
-  if (!imageUrl) return null;
+  if (!imageUrl || !open) return null;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-fit bg-transparent border-0 shadow-none p-0 flex justify-center items-center">
-        {shape === "circle" ? (
-          <div className="w-[400px] h-[400px] rounded-full overflow-hidden flex justify-center items-center bg-black/10">
-            <img
-              src={imageUrl}
-              alt="Full view"
-              className="w-full h-full object-cover rounded-full"
-            />
-          </div>
-        ) : (
+    <div 
+      className="fixed inset-0 z-50 bg-transparent flex justify-center items-center p-4"
+      onClick={() => onOpenChange(false)}
+    >
+      {shape === "circle" ? (
+        <div 
+          className="relative w-[400px] h-[400px]"
+          onClick={(e) => e.stopPropagation()}
+        >
           <img
             src={imageUrl}
             alt="Full view"
-            className="rounded-lg max-h-[85vh] object-contain"
+            className="w-full h-full object-cover rounded-full"
           />
-        )}
-      </DialogContent>
-    </Dialog>
+          <button
+            onClick={() => onOpenChange(false)}
+            className="absolute top-2 right-2 bg-white/90 hover:bg-white rounded-full p-2 transition-colors duration-200 text-black"
+            aria-label="Close image"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+      ) : (
+        <div 
+          className="relative max-w-5xl max-h-[90vh]"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <img
+            src={imageUrl}
+            alt="Full view"
+            className="w-full h-full object-contain rounded-lg"
+          />
+          <button
+            onClick={() => onOpenChange(false)}
+            className="absolute top-2 right-2 bg-white/90 hover:bg-white rounded-full p-2 transition-colors duration-200 text-black"
+            aria-label="Close image"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+      )}
+    </div>
   );
 };
 
