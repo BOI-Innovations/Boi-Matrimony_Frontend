@@ -166,7 +166,7 @@ const Sidebar = ({ activeSection, onSectionChange, isMobileOpen, onMobileOpenCha
 
       {/* Mobile Sidebar */}
       <Sheet open={isMobileOpen} onOpenChange={onMobileOpenChange}>
-        <SheetContent side="left" className="w-64 p-0 overflow-y-auto">
+        <SheetContent side="right" className="w-64 p-0 overflow-y-auto">
           {sidebarContent}
         </SheetContent>
       </Sheet>

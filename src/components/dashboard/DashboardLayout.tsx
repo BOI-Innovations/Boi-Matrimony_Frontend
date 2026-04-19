@@ -48,6 +48,13 @@ const DashboardLayout = ({ children, activeSection, onSectionChange, autoOpenSub
             <span className="text-xs">Matches</span>
           </button>
           <button
+            onClick={() => onSectionChange("interests")}
+            className={`flex flex-col items-center gap-1 ${activeSection === "interests" ? "text-primary" : "text-muted-foreground"} hover:text-primary transition-colors`}
+          >
+            <Heart className="w-5 h-5" />
+            <span className="text-xs">Interests</span>
+          </button>
+          <button
             onClick={() => onSectionChange("messages")}
             className={`flex flex-col items-center gap-1 ${activeSection === "messages" ? "text-primary" : "text-muted-foreground"} hover:text-primary transition-colors`}
           >

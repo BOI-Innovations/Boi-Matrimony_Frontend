@@ -7,6 +7,7 @@ import { Heart, Loader2, AlertTriangle, X } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { CardTitle, CardDescription } from "@/components/ui/card";
 import bannerImage from "@/images/banner.png";
+import logoImage from "@/assets/boilogo.png";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -140,7 +141,7 @@ const Login = () => {
       <main className="flex-grow flex items-center justify-center p-6">
         <div
           className="flex flex-col lg:flex-row w-full max-w-5xl rounded-2xl shadow-xl border border-gray-200 overflow-hidden bg-white animate-fade-in"
-          style={{ maxHeight: "600px" }} // 👈 limit overall card height
+          style={{ maxHeight: "550px" }} // 👈 limit overall card height
         >
           {/* LEFT IMAGE SECTION (hidden on small screens) */}
           <div className="hidden lg:flex lg:w-1/2 h-full">
@@ -159,12 +160,13 @@ const Login = () => {
             >
               <div className="text-center space-y-3">
                 <div className="flex flex-col items-center gap-2">
-                  <div className="w-14 h-14 rounded-full bg-gradient-to-r from-rose-500 to-pink-600 flex items-center justify-center shadow-md">
-                    <Heart className="w-7 h-7 text-white fill-current" />
+                  <div className="flex items-center justify-center">
+                    <img
+                      src={logoImage}
+                      alt="BOI Logo"
+                      className="w-40 h-auto object-contain" 
+                    />
                   </div>
-                  <h1 className="text-3xl font-extrabold bg-gradient-to-r from-rose-600 to-pink-500 bg-clip-text text-transparent">
-                    BOI Matrimony
-                  </h1>
                   <p className="text-sm text-gray-500">
                     Find your perfect life partner 💕
                   </p>
