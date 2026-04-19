@@ -17,7 +17,7 @@ const FullImageViewer = ({
 
   return (
     <div 
-      className="fixed inset-0 z-50 bg-black/50 flex justify-center items-center p-4"
+      className="fixed inset-0 z-50 bg-transparent flex justify-center items-center p-4"
       onClick={() => onOpenChange(false)}
     >
       {shape === "circle" ? (
