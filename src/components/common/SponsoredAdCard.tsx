@@ -158,26 +158,30 @@ const SponsoredAdsCarousel = () => {
                 {/* Gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
 
-                {/* Content */}
-                <div className="absolute bottom-3 left-3 right-3 text-white space-y-1">
-                  <h4 className="text-sm font-semibold leading-tight">
-                    {ad.title}
-                  </h4>
-                  <p className="text-xs text-white/80 line-clamp-1">
-                    {ad.description}
-                  </p>
+                {/* Content - only show if there's text or URL */}
+                {ad.title || ad.description || ad.ctaUrl ? (
+                  <div className="absolute bottom-3 left-3 right-3 text-white space-y-1">
+                    <h4 className="text-sm font-semibold leading-tight">
+                      {ad.title}
+                    </h4>
+                    <p className="text-xs text-white/80 line-clamp-1">
+                      {ad.description}
+                    </p>
 
-                  <Button
-                    size="sm"
-                    className="h-7 px-3 text-xs bg-gradient-primary"
-                    onClick={() => ad.ctaUrl && window.open(ad.ctaUrl, "_blank")}
-                  >
-                    {["video", "VIDEO"].includes(ad.mediaType) && (
-                      <PlayCircle className="w-3 h-3 mr-1" />
+                    {ad.ctaUrl && (
+                      <Button
+                        size="sm"
+                        className="h-7 px-3 text-xs bg-gradient-primary"
+                        onClick={() => window.open(ad.ctaUrl, "_blank")}
+                      >
+                        {["video", "VIDEO"].includes(ad.mediaType) && (
+                          <PlayCircle className="w-3 h-3 mr-1" />
+                        )}
+                        {ad.ctaText}
+                      </Button>
                     )}
-                    {ad.ctaText}
-                  </Button>
-                </div>
+                  </div>
+                ) : null}
 
                 {/* Sponsored badge */}
                 <span className="absolute top-2 left-2 bg-black/60 text-white text-[10px] px-2 py-0.5 rounded">
