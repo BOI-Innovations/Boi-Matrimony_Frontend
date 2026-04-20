@@ -19,6 +19,7 @@ import Step4Family from "@/components/signup/Step4Family";
 import Step5Hobbies from "@/components/signup/Step5Hobbies";
 import Step6PartnerPreferences from "@/components/signup/Step6PartnerPreferences";
 import Step7Location from "@/components/signup/Step7Location";
+import Step8Photos from "@/components/signup/Step8Photos";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ const Signup = () => {
   const [supportEmail, setSupportEmail] = useState("");
   const [supportSubject, setSupportSubject] = useState("");
   const [supportMessage, setSupportMessage] = useState("");
-  const totalSteps = 7;
+  const totalSteps = 8;
 
   const steps = [
     { number: 1, title: "Social Account Info", component: Step1AccountInfo },
@@ -39,14 +40,18 @@ const Signup = () => {
     { number: 5, title: "Hobbies & Interests", component: Step5Hobbies },
     { number: 6, title: "Partner Preferences", component: Step6PartnerPreferences },
     { number: 7, title: "Location Details", component: Step7Location },
+    { number: 8, title: "Photos", component: Step8Photos },
   ];
 
   const CurrentStepComponent = steps[currentStep - 1].component;
 
   const handleNext = (data: any) => {
     setFormData({ ...formData, ...data });
-    if (currentStep < totalSteps) setCurrentStep(currentStep + 1);
-    else handleSubmit({ ...formData, ...data });
+    if (currentStep < totalSteps) {
+      setCurrentStep(currentStep + 1);
+    } else {
+      handleSubmit({ ...formData, ...data });
+    }
   };
 
   const handleBack = () => {
