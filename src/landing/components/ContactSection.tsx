@@ -14,20 +14,50 @@ const ContactSection = () => {
     subject: "",
     message: "",
   });
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Message Sent!",
-      description: "Thank you for contacting us. We will get back to you shortly.",
-    });
-    setForm({
-      name: "",
-      email: "",
-      phone: "",
-      subject: "",
-      message: "",
-    });
+    setLoading(true);
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/users/raiseTicket`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          subject: form.subject,
+          message: form.message,
+          phoneNumber: form.phone
+        })
+      });
+      const data = await response.json();
+      if (response.ok) {
+        toast({
+          title: "Success",
+          description: data.message || "Help request submitted successfully"
+        });
+        setForm({
+          name: "",
+          email: "",
+          phone: "",
+          subject: "",
+          message: "",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: data.message || "Something went wrong"
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to submit form"
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -112,8 +142,8 @@ const ContactSection = () => {
                 required
               />
 
-              <Button type="submit" size="lg" className="w-full font-body text-base">
-                Send Message
+              <Button type="submit" size="lg" className="w-full font-body text-base" disabled={loading}>
+                {loading ? "Sending..." : "Send Message"}
               </Button>
             </form>
 
@@ -132,17 +162,17 @@ const ContactSection = () => {
                 <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                   <Mail size={16} className="text-primary" />
                 </div>
-                <a href="mailto:boindia18@gmail.com" className="hover:text-primary transition-colors">
-                  boindia18@gmail.com
+                <a href="mailto:boimatrimony@gmail.com" className="hover:text-primary transition-colors">
+                  boimatrimony@gmail.com
                 </a>
               </div>
 
               <div className="flex items-center gap-3 font-body text-sm text-muted-foreground">
-  <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-    <MapPin size={16} className="text-primary" />
-  </div>
-  HO: A-2, Suraj Park, Opp. Gate No. 2, Badli Industrial Area, Delhi - 110042 (India)
-</div>
+                <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                  <MapPin size={16} className="text-primary" />
+                </div>
+                HO: A-2, Suraj Park, Opp. Gate No. 2, Badli Industrial Area, Delhi - 110042 (India)
+              </div>
 
             </div>
           </div>

@@ -113,10 +113,11 @@ const Step7Location = ({ data, onNext, onBack, isLastStep }: StepProps) => {
       });
 
       const result = await response.json();
-      if (response.ok && result.statusCode === 201) {
+      // Handle both 201 (created) and 200 (updated) status codes
+      if (response.ok && (result.statusCode === 201 || result.statusCode === 200)) {
         toast({
           title: "Success",
-          description: "Location created successfully.",
+          description: result.message || "Location saved successfully.",
         });
         onNext(result.payload);
       } else {

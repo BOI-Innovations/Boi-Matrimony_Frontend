@@ -23,6 +23,7 @@ const Login = () => {
   const [supportEmail, setSupportEmail] = useState("");
   const [supportSubject, setSupportSubject] = useState("");
   const [supportMessage, setSupportMessage] = useState("");
+  const [supportPhoneNumber, setSupportPhoneNumber] = useState("");
 
   useEffect(() => {
     setShowNotice(true);
@@ -99,6 +100,7 @@ const Login = () => {
           email: supportEmail,
           subject: supportSubject,
           message: supportMessage,
+          phoneNumber: supportPhoneNumber,
         }),
       });
       const data = await response.json();
@@ -112,6 +114,7 @@ const Login = () => {
         setSupportEmail("");
         setSupportSubject("");
         setSupportMessage("");
+        setSupportPhoneNumber("");
       } else {
         throw new Error(data.message || "Failed to submit support request");
       }
@@ -324,6 +327,16 @@ const Login = () => {
                 type="email"
                 value={supportEmail}
                 onChange={(e) => setSupportEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="support-phone">Phone Number</Label>
+              <Input
+                id="support-phone"
+                type="tel"
+                value={supportPhoneNumber}
+                onChange={(e) => setSupportPhoneNumber(e.target.value)}
                 required
               />
             </div>

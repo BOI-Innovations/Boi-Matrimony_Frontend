@@ -19,6 +19,7 @@ import Step4Family from "@/components/signup/Step4Family";
 import Step5Hobbies from "@/components/signup/Step5Hobbies";
 import Step6PartnerPreferences from "@/components/signup/Step6PartnerPreferences";
 import Step7Location from "@/components/signup/Step7Location";
+import Step8Photos from "@/components/signup/Step8Photos";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -29,7 +30,8 @@ const Signup = () => {
   const [supportEmail, setSupportEmail] = useState("");
   const [supportSubject, setSupportSubject] = useState("");
   const [supportMessage, setSupportMessage] = useState("");
-  const totalSteps = 7;
+  const [supportPhoneNumber, setSupportPhoneNumber] = useState("");
+  const totalSteps = 8;
 
   const steps = [
     { number: 1, title: "Social Account Info", component: Step1AccountInfo },
@@ -39,14 +41,18 @@ const Signup = () => {
     { number: 5, title: "Hobbies & Interests", component: Step5Hobbies },
     { number: 6, title: "Partner Preferences", component: Step6PartnerPreferences },
     { number: 7, title: "Location Details", component: Step7Location },
+    { number: 8, title: "Photos", component: Step8Photos },
   ];
 
   const CurrentStepComponent = steps[currentStep - 1].component;
 
   const handleNext = (data: any) => {
     setFormData({ ...formData, ...data });
-    if (currentStep < totalSteps) setCurrentStep(currentStep + 1);
-    else handleSubmit({ ...formData, ...data });
+    if (currentStep < totalSteps) {
+      setCurrentStep(currentStep + 1);
+    } else {
+      handleSubmit({ ...formData, ...data });
+    }
   };
 
   const handleBack = () => {
@@ -57,7 +63,7 @@ const Signup = () => {
     console.log("Final form data:", finalData);
     toast({
       title: "Registration Successful!",
-      description: "Welcome to Brahmin Matrimony. Let's find your perfect match!",
+      description: "Welcome to BOI Matrimony. Let's find your perfect match!",
     });
     setTimeout(() => navigate("/login"), 1500);
   };
@@ -76,6 +82,7 @@ const Signup = () => {
           email: supportEmail,
           subject: supportSubject,
           message: supportMessage,
+          phoneNumber: supportPhoneNumber,
         }),
       });
       const data = await response.json();
@@ -89,6 +96,7 @@ const Signup = () => {
         setSupportEmail("");
         setSupportSubject("");
         setSupportMessage("");
+        setSupportPhoneNumber("");
       } else {
         throw new Error(data.message || "Failed to submit support request");
       }
@@ -220,6 +228,16 @@ const Signup = () => {
                   type="email"
                   value={supportEmail}
                   onChange={(e) => setSupportEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="support-phone">Phone Number</Label>
+                <Input
+                  id="support-phone"
+                  type="tel"
+                  value={supportPhoneNumber}
+                  onChange={(e) => setSupportPhoneNumber(e.target.value)}
                   required
                 />
               </div>
