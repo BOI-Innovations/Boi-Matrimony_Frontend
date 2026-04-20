@@ -228,7 +228,10 @@ const Step8Photos = ({ data, onNext, onBack, isFirstStep, isLastStep }: Step8Pho
                                 />
                             </div>
                         ) : (
-                            <div className="w-32 h-32 rounded-full border-4 border-primary bg-gray-200 flex items-center justify-center shrink-0">
+                            <div 
+                                className="w-32 h-32 rounded-full border-4 border-primary bg-gray-200 flex items-center justify-center shrink-0 cursor-pointer hover:bg-gray-300 transition"
+                                onClick={() => fileInputRef.current?.click()}
+                            >
                                 <Upload className="w-8 h-8 text-muted-foreground" />
                             </div>
                         )}

@@ -62,7 +62,7 @@ const Signup = () => {
     console.log("Final form data:", finalData);
     toast({
       title: "Registration Successful!",
-      description: "Welcome to Brahmin Matrimony. Let's find your perfect match!",
+      description: "Welcome to BOI Matrimony. Let's find your perfect match!",
     });
     setTimeout(() => navigate("/login"), 1500);
   };

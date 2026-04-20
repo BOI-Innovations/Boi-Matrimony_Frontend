@@ -150,10 +150,10 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Clear previous validation errors
     setValidationErrors(new Set());
-    
+
     // Validate First Name
     const firstNameError = validateNameField(formData.firstName, "First Name");
     if (firstNameError) {
@@ -189,7 +189,7 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
       });
       return;
     }
-    
+
     // Validation for required fields
     const requiredFields = [
       { key: "firstName", label: "First Name" },
@@ -325,7 +325,7 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
         {/* First Name */}
         <div className="space-y-2">
           <Label htmlFor="firstName">
-            First Name (नाम) 
+            First Name (नाम)
             <span className="text-red-500 ml-1">*</span>
           </Label>
           <Input
@@ -348,7 +348,7 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
         {/* Last Name */}
         <div className="space-y-2">
           <Label htmlFor="lastName">
-            Last Name (उपनाम) 
+            Last Name (उपनाम)
             <span className="text-red-500 ml-1">*</span>
           </Label>
           <Input
@@ -425,6 +425,7 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
             id="dateOfBirth"
             type="date"
             value={formData.dateOfBirth}
+            max={new Date().toISOString().split("T")[0]} // prevents future dates
             onChange={(e) => setFormData({ ...formData, dateOfBirth: e.target.value })}
             required
           />
@@ -445,7 +446,7 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
         {/* Place of Birth */}
         <div className="space-y-2">
           <Label htmlFor="placeOfBirth">
-            Place of Birth (जन्म स्थान) 
+            Place of Birth (जन्म स्थान)
             <span className="text-red-500 ml-1">*</span>
           </Label>
           <Input
@@ -701,11 +702,10 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
                 motherTongueOptions.map((item) => (
                   <div
                     key={item.id}
-                    className={`px-3 py-2 cursor-pointer rounded-md ${
-                      formData.languagesKnown.includes(item.languageName)
+                    className={`px-3 py-2 cursor-pointer rounded-md ${formData.languagesKnown.includes(item.languageName)
                         ? "bg-primary text-white"
                         : "hover:bg-gray-100"
-                    }`}
+                      }`}
                     onClick={() => handleLanguageSelect(item.languageName)}
                   >
                     {item.languageName}
@@ -943,7 +943,7 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
       {/* Declaration block */}
       <div className="space-y-4 pt-6 border-t">
         <h3 className="font-semibold text-lg">Declaration Text (घोषणा पाठ)</h3>
-        
+
         <p className="text-muted-foreground leading-relaxed">
           {DECLARATION_TEXT}
         </p>
