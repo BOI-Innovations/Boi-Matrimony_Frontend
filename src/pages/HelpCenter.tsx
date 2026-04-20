@@ -31,6 +31,7 @@ const HelpCenter = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phoneNumber: "",
     subject: "",
     message: "",
   });
@@ -62,6 +63,23 @@ const HelpCenter = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(value)) {
       return "Please enter a valid email address.";
+    }
+    return null;
+  };
+
+  // Validation helper for Phone Number
+  const validatePhoneNumber = (value: string): string | null => {
+    if (!value || value.trim() === "") {
+      return "Phone Number is required.";
+    }
+    // Allow only digits, spaces, hyphens, plus sign
+    if (!/^[+\d\s-]+$/.test(value)) {
+      return "Phone Number can only contain digits, spaces, hyphens, and plus sign.";
+    }
+    // Remove non-digit characters for length check
+    const digitsOnly = value.replace(/\D/g, "");
+    if (digitsOnly.length < 10 || digitsOnly.length > 15) {
+      return "Phone Number must be between 10 and 15 digits.";
     }
     return null;
   };
@@ -154,6 +172,18 @@ const HelpCenter = () => {
       return;
     }
 
+    // Validate Phone Number
+    const phoneError = validatePhoneNumber(formData.phoneNumber);
+    if (phoneError) {
+      setValidationErrors(new Set(["phoneNumber"]));
+      toast({
+        title: "Validation Error",
+        description: phoneError,
+        variant: "destructive",
+      });
+      return;
+    }
+
     // Validate Subject
     const subjectError = validateSubject(formData.subject);
     if (subjectError) {
@@ -196,7 +226,7 @@ const HelpCenter = () => {
           title: "Message sent",
           description: "Our support team will get back to you within 24 hours.",
         });
-        setFormData({ name: "", email: "", subject: "", message: "" });
+        setFormData({ name: "", email: "", phoneNumber: "", subject: "", message: "" });
         setValidationErrors(new Set());
         // fetchHelpRequests(); // refresh table (commented out: no API calls / table refresh)
       } else {
@@ -262,8 +292,8 @@ const HelpCenter = () => {
             <p className="text-sm text-muted-foreground mb-4">
               We'll respond within 24 hours
             </p>
-            <a href="mailto:boindia18@gmail.com" className="font-semibold text-primary hover:underline">
-              boindia18@gmail.com
+            <a href="mailto:boimatrimony@gmail.com" className="font-semibold text-primary hover:underline">
+              boimatrimony@gmail.com
             </a>
           </CardContent>
         </Card>
@@ -297,7 +327,7 @@ const HelpCenter = () => {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Full Name</Label>
                 <Input
@@ -334,6 +364,26 @@ const HelpCenter = () => {
                   }}
                   className={cn(
                     validationErrors.has("email") && "border-red-500 border-2 focus:border-red-500"
+                  )}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="phoneNumber">Phone Number</Label>
+                <Input
+                  id="phoneNumber"
+                  type="tel"
+                  placeholder="Enter your phone number"
+                  required
+                  value={formData.phoneNumber}
+                  onChange={(e) => {
+                    setFormData({ ...formData, phoneNumber: e.target.value });
+                    // Clear error when user starts typing
+                    if (validationErrors.has("phoneNumber")) {
+                      setValidationErrors(new Set(Array.from(validationErrors).filter(f => f !== "phoneNumber")));
+                    }
+                  }}
+                  className={cn(
+                    validationErrors.has("phoneNumber") && "border-red-500 border-2 focus:border-red-500"
                   )}
                 />
               </div>
