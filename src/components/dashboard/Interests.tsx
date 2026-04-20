@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { MessageSquare, User, Loader2, MapPin, AlertCircle } from "lucide-react";
+import { MessageSquare, User, Loader2, MapPin, AlertCircle, Heart } from "lucide-react";
 import ProfileModal from "./ProfileModal";
 import { SubscriptionModal } from "@/components/common/SubscriptionModal";
 
@@ -591,8 +591,9 @@ const Matches = ({ onViewProfile }: MatchesProps = {}) => {
   // Load on init
   // ----------------------------------------------------
   useEffect(() => {
-    fetchMatches(0);
+    // fetchMatches(0); // Hold suggestions API call for now; we will show the launch state instead.
     fetchConnectionStatus();
+    setLoading(false);
   }, [activeTab]);
 
   const handleChatClick = (matchId: number) => {
@@ -639,9 +640,18 @@ const Matches = ({ onViewProfile }: MatchesProps = {}) => {
 
       {/* No Matches */}
       {!loading && !profileCompletion.incomplete && matches.length === 0 && (
-        <div className="text-center py-10 text-muted-foreground">
-          No invitations found
-        </div>
+          <div className="col-span-full flex flex-col items-center justify-center p-8 text-center bg-muted/30 rounded-lg border-2 border-dashed">
+            <div className="bg-primary/10 p-3 rounded-full mb-4">
+              <Heart className="w-8 h-8 text-primary" />
+            </div>
+            <h3 className="text-xl font-semibold mb-2">Interest feature coming soon</h3>
+            <div className="text-muted-foreground max-w-md space-y-3 mb-6">
+              <p>Soon, you will be able to express interest in profiles and connect with like-minded individuals.</p>
+              <p>For now, we encourage you to complete your profile and be ready for meaningful connections.</p>
+              <p>You will be notified via email as soon as this feature is launched.</p>
+              <p>Thank you for your patience and support.</p>
+            </div>
+          </div>
       )}
 
       {/* Cards */}

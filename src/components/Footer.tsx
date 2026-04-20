@@ -37,7 +37,7 @@ const Footer = () => {
                 <Heart className="w-6 h-6 text-primary-foreground fill-current" />
               </div> */}
               <span className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                Brahmin Matrimony
+                BOI Matrimony
               </span>
             </div>
             <p className="text-muted-foreground text-sm">

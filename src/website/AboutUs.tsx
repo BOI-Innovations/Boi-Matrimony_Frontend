@@ -66,7 +66,7 @@ const AboutUs = () => {
       <Navbar />
       
       <PageBanner
-  title="About Brahmin Matrimony"
+  title="About BOI Matrimony"
   subtitle="A selfless social initiative preserving Sanatan values, cultural harmony, and sacred marital traditions within the Brahmin community"
   backgroundImage="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=1920&h=600&fit=crop"
 />
@@ -82,11 +82,11 @@ const AboutUs = () => {
               </h2>
 
               <p className="text-muted-foreground mb-4 text-justify">
-                Brahmin Matrimony is a selfless social initiative dedicated to the Brahmin community, with the objective of preserving and promoting Sanatan culture, classical traditions, and strong family values. This platform is founded on the belief that cultural awareness and ethical conduct form the foundation of a stable and balanced married life.
+                BOI Matrimony is a selfless social initiative dedicated to the Brahmin community, with the objective of preserving and promoting Sanatan culture, classical traditions, and strong family values. This platform is founded on the belief that cultural awareness and ethical conduct form the foundation of a stable and balanced married life.
               </p>
 
               <p className="text-muted-foreground mb-4 text-justify">
-                In today’s rapidly changing social landscape, many families and young individuals find it difficult to identify a life partner who respects traditions while adapting to modern life. Understanding this need, Brahmin Matrimony offers a trustworthy, dignified, and well-organized platform where cultural and spiritual harmony is given equal importance alongside personal preferences.
+                In today’s rapidly changing social landscape, many families and young individuals find it difficult to identify a life partner who respects traditions while adapting to modern life. Understanding this need, BOI Matrimony offers a trustworthy, dignified, and well-organized platform where cultural and spiritual harmony is given equal importance alongside personal preferences.
               </p>
 
               <p className="text-muted-foreground text-justify">

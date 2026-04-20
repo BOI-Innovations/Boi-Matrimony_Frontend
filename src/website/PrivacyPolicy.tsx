@@ -54,7 +54,7 @@ const PrivacyPolicy = () => {
               How the website/apps uses the information it collects/tracks?
             </h2>
             <p className="text-muted-foreground text-justify leading-relaxed mb-4">
-              Brahmin Matrimony.com collects information for data analysis, identifying usage trends, determining the effectiveness of our promotional campaigns and to evaluate and improve our websites or apps, products, and services ,marketing research from our users primarily to ensure that we are able to fulfil your requirements and to deliver Personalised experience.
+              BOI Matrimony.com collects information for data analysis, identifying usage trends, determining the effectiveness of our promotional campaigns and to evaluate and improve our websites or apps, products, and services ,marketing research from our users primarily to ensure that we are able to fulfil your requirements and to deliver Personalised experience.
             </p>
             <p className="text-muted-foreground text-justify leading-relaxed">
               We may use also your personal information for analysis of data, usage trends and to evaluate and improve our site/App, marketing research, preventing of frauds. In our efforts to continually improve our product and service offerings, we collect and analyse demographic and profile data about our users' activity on our website/apps. We identify and use your IP address to help diagnose problems with our server, and to administer our website/apps. Your IP address is also used to help identify you and to gather broad demographic information.

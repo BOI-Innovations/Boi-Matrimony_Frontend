@@ -11,11 +11,15 @@ import {
   Lock,
   Eye,
   EyeOff,
+  HelpCircle,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { CardTitle, CardDescription } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 import bannerImage from "@/images/banner.png";
-
+import indianWeddingImage from "@/assets/IndianWedding.jpeg";
+import logoImage from "@/assets/boilogo.png";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -26,6 +30,11 @@ const ForgotPassword = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [resetToken, setResetToken] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isSupportOpen, setIsSupportOpen] = useState(false);
+  const [supportName, setSupportName] = useState("");
+  const [supportEmail, setSupportEmail] = useState("");
+  const [supportSubject, setSupportSubject] = useState("");
+  const [supportMessage, setSupportMessage] = useState("");
 
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -168,42 +177,78 @@ const ForgotPassword = () => {
     }
   };
 
+  const handleSupportSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`${baseUrl}/api/users/raiseTicket`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: supportName,
+          email: supportEmail,
+          subject: supportSubject,
+          message: supportMessage,
+        }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        toast({
+          title: "Success",
+          description: data.message || "Help request submitted successfully",
+        });
+        setIsSupportOpen(false);
+        setSupportName("");
+        setSupportEmail("");
+        setSupportSubject("");
+        setSupportMessage("");
+      } else {
+        throw new Error(data.message || "Failed to submit support request");
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-rose-50 to-rose-100 p-6">
       <div
-        className="flex flex-col lg:flex-row w-full max-w-5xl rounded-2xl shadow-xl border border-gray-200 overflow-hidden bg-white animate-fade-in"
-        style={{ maxHeight: "550px" }}
+        className="flex flex-col lg:flex-row w-full max-w-5xl rounded-2xl shadow-xl border border-gray-200 overflow-hidden bg-white animate-fade-in relative"
+        style={{ maxHeight: "520px" }}
       >
-        {/* LEFT IMAGE SECTION */}
         <div className="hidden lg:flex lg:w-1/2 h-full">
           <img
-            src={bannerImage}
+            src={indianWeddingImage}
             alt="Matrimony Love"
             className="object-cover w-full h-full"
           />
         </div>
 
-        {/* RIGHT FORM SECTION */}
         <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white">
           <form
             onSubmit={
               step === 1
                 ? handleSendOtp
                 : step === 2
-                ? handleVerifyOtp
-                : handleResetPassword
+                  ? handleVerifyOtp
+                  : handleResetPassword
             }
             className="w-full max-w-md space-y-6"
           >
-            {/* HEADER */}
             <div className="text-center space-y-3">
               <div className="flex flex-col items-center gap-2">
-                <div className="w-14 h-14 rounded-full bg-gradient-to-r from-rose-500 to-pink-600 flex items-center justify-center shadow-md">
-                  <Heart className="w-7 h-7 text-white fill-current" />
+                <div className="flex items-center justify-center">
+                  <img
+                    src={logoImage}
+                    alt="BOI Logo"
+                    className="w-40 h-auto object-contain"
+                  />
                 </div>
-                <h1 className="text-3xl font-extrabold bg-gradient-to-r from-rose-600 to-pink-500 bg-clip-text text-transparent">
-                  MatrimonyHub
-                </h1>
                 <p className="text-sm text-gray-500">
                   Recover your password 🔐
                 </p>
@@ -351,8 +396,8 @@ const ForgotPassword = () => {
                     {step === 1
                       ? "Sending..."
                       : step === 2
-                      ? "Verifying..."
-                      : "Resetting..."}
+                        ? "Verifying..."
+                        : "Resetting..."}
                   </>
                 ) : (
                   <>
@@ -374,8 +419,65 @@ const ForgotPassword = () => {
               </p>
             </div>
           </form>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsSupportOpen(true)}
+            className="absolute top-4 right-4"
+          >
+            <HelpCircle className="w-5 h-5" />
+          </Button>
         </div>
       </div>
+      <Dialog open={isSupportOpen} onOpenChange={setIsSupportOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Contact Support</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleSupportSubmit} className="space-y-4">
+            <div>
+              <Label htmlFor="support-name">Name</Label>
+              <Input
+                id="support-name"
+                value={supportName}
+                onChange={(e) => setSupportName(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="support-email">Email</Label>
+              <Input
+                id="support-email"
+                type="email"
+                value={supportEmail}
+                onChange={(e) => setSupportEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="support-subject">Subject</Label>
+              <Input
+                id="support-subject"
+                value={supportSubject}
+                onChange={(e) => setSupportSubject(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="support-message">Message</Label>
+              <Textarea
+                id="support-message"
+                value={supportMessage}
+                onChange={(e) => setSupportMessage(e.target.value)}
+                required
+              />
+            </div>
+            <Button type="submit" className="w-full">
+              Submit
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
