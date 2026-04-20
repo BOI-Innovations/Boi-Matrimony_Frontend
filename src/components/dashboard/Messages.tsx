@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Send, ArrowLeft, Search } from "lucide-react";
+import { Send, ArrowLeft, Search, Heart } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import FullImageViewer from "@/components/common/FullImageViewer";
@@ -118,59 +118,61 @@ const Messages = () => {
   useEffect(() => {
     if (!currentUser) return;
 
-    const token = getToken();
-    if (!token) return;
+    // WebSocket and connections loading logic held for now
+    // const token = getToken();
+    // if (!token) return;
 
-    const webSocketFactory = () => new SockJS(`${API_BASE_URL}/ws`, null, {
-      transports: ['websocket', 'xhr-streaming', 'xhr-polling']
-    });
-    const client = Stomp.over(webSocketFactory);
+    // const webSocketFactory = () => new SockJS(`${API_BASE_URL}/ws`, null, {
+    //   transports: ['websocket', 'xhr-streaming', 'xhr-polling']
+    // });
+    // const client = Stomp.over(webSocketFactory);
     
-    stompClientRef.current = client;
+    // stompClientRef.current = client;
 
-    client.connect(
-      { Authorization: `Bearer ${token}` },
-      () => {
-        console.log('✅ Connected to WebSocket');
-        setConnectionStatus("connected");
-        setStompClient(client);
+    // client.connect(
+    //   { Authorization: `Bearer ${token}` },
+    //   () => {
+    //     console.log('✅ Connected to WebSocket');
+    //     setConnectionStatus("connected");
+    //     setStompClient(client);
 
-        // Subscribe to personal messages
-        client.subscribe(`/topic/user/${currentUser.id}`, (message) => {
-          try {
-            const payload = JSON.parse(message.body);
-            console.log('📨 Received message:', payload);
-            handleIncomingMessage(payload);
-          } catch (e) {
-            console.error('Error parsing message:', e);
-          }
-        });
+    //     // Subscribe to personal messages
+    //     client.subscribe(`/topic/user/${currentUser.id}`, (message) => {
+    //       try {
+    //         const payload = JSON.parse(message.body);
+    //         console.log('📨 Received message:', payload);
+    //         handleIncomingMessage(payload);
+    //       } catch (e) {
+    //         console.error('Error parsing message:', e);
+    //       }
+    //     });
 
-        // Subscribe to typing indicators
-        client.subscribe(`/topic/typing/${currentUser.id}`, (message) => {
-          try {
-            const payload = JSON.parse(message.body);
-            handleTypingIndicator(payload);
-          } catch (e) {
-            console.error('Error parsing typing indicator:', e);
-          }
-        });
+    //     // Subscribe to typing indicators
+    //     client.subscribe(`/topic/typing/${currentUser.id}`, (message) => {
+    //       try {
+    //         const payload = JSON.parse(message.body);
+    //         handleTypingIndicator(payload);
+    //       } catch (e) {
+    //         console.error('Error parsing typing indicator:', e);
+    //       }
+    //     });
 
-        loadConnections();
-      },
-      (error) => {
-        console.error('WebSocket error:', error);
-        setConnectionStatus("disconnected");
-      }
-    );
+    //     loadConnections();
+    //   },
+    //   (error) => {
+    //     console.error('WebSocket error:', error);
+    //     setConnectionStatus("disconnected");
+    //   }
+    // );
 
-    return () => {
-      if (client && client.connected) {
-        client.disconnect(() => {
-          // Disconnected successfully
-        });
-      }
-    };
+    // return () => {
+    //   if (client && client.connected) {
+    //     client.disconnect(() => {
+    //       // Disconnected successfully
+    //     });
+    //   }
+    // };
+    setIsLoading(false);
   }, [currentUser]);
 
   // Auto-scroll to bottom when new messages arrive
@@ -689,7 +691,7 @@ const Messages = () => {
   }
 
   return (
-    <div className="h-[calc(100vh-100px)] overflow-hidden" onClick={closeContextMenu}>
+<div className="h-[calc(100vh-100px)] overflow-hidden" onClick={closeContextMenu}>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">
         {/* LEFT - Conversations List */}
         <Card
@@ -724,7 +726,7 @@ const Messages = () => {
               </div>
             ) : filteredConversations.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
-                <p>No conversations found</p>
+                <p>{conversations.length === 0 ? "Messaging will be enabled shortly" : "No conversations found"}</p>
               </div>
             ) : (
               filteredConversations.map((conversation) => {
@@ -795,13 +797,26 @@ const Messages = () => {
         </Card>
 
         {/* RIGHT - Chat Window */}
-        {currentConversation ? (
+        {!isLoading && conversations.length === 0 ? (
+          <div className={`lg:col-span-2 flex flex-col items-center justify-center h-full p-8 text-center bg-muted/30 rounded-lg border-2 border-dashed ${showChat ? "flex" : "hidden lg:flex"}`}>
+            <div className="bg-primary/10 p-3 rounded-full mb-4">
+              <Heart className="w-8 h-8 text-primary" />
+            </div>
+            <h3 className="text-xl font-semibold mb-2">Messaging will be enabled shortly</h3>
+            <div className="text-muted-foreground max-w-md space-y-3">
+              <p>To ensure a safe and respectful environment, messaging will be activated after the initial registration phase.</p>
+              <p>You will be notified via email as soon as this feature is launched.</p>
+              <p>Stay connected — your journey begins soon.</p>
+              <p>Thank you for your patience and support.</p>
+            </div>
+          </div>
+        ) : currentConversation ? (
           <Card
             className={`lg:col-span-2 border-0 shadow-medium h-full flex flex-col overflow-hidden ${
               !showChat ? "hidden lg:flex" : "flex"
             }`}
           >
-            <CardHeader className="border-b flex-shrink-0">
+            <CardHeader className="border-b flex-shrink-0 py-3">
               <div className="flex items-center gap-3">
                 <Button variant="ghost" size="icon" onClick={handleBack} className="lg:hidden">
                   <ArrowLeft className="w-5 h-5" />
@@ -839,10 +854,10 @@ const Messages = () => {
             </CardHeader>
 
             {/* Chat Messages */}
-            <CardContent className="flex-1 overflow-y-auto p-6">
+            <CardContent className="flex-1 overflow-y-auto py-3 px-6">
               <div className="space-y-4">
                 {(!messages[selectedConversation] || messages[selectedConversation]?.length === 0) && (
-                  <div className="text-center py-8 text-muted-foreground">
+                  <div className="text-center py-4 text-muted-foreground">
                     <p>No messages yet. Start the conversation!</p>
                   </div>
                 )}
@@ -929,7 +944,7 @@ const Messages = () => {
             </CardContent>
 
             {/* Message Input */}
-            <div className="p-4 border-t flex gap-2 flex-shrink-0">
+            <div className="p-3 border-t flex gap-2 flex-shrink-0">
               <Input
                 placeholder="Type your message..."
                 className="flex-1"

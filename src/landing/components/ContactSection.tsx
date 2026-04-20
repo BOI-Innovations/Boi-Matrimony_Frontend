@@ -33,19 +33,19 @@ const ContactSection = () => {
   return (
     <section id="contact" className="py-10 lg:py-14 bg-background">
       <div className="container mx-auto px-4 lg:px-8">
-        
+
         <div className="text-center mb-10 max-w-3xl mx-auto">
           <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-4">
             Get in Touch
           </h2>
           <p className="font-body text-muted-foreground text-sm">
-             Have questions, need guidance, or want to learn more about BOI Matrimony? 
+            Have questions, need guidance, or want to learn more about BOI Matrimony?
             Our dedicated team is here to help you with care and clarity.
           </p>
         </div>
 
         <div className="bg-card rounded-2xl shadow-card border border-border overflow-hidden max-w-6xl mx-auto grid lg:grid-cols-2">
-          
+
           {/* Image Section */}
           <div className="relative w-full aspect-[4/3] lg:aspect-auto lg:h-full">
             <img
@@ -64,7 +64,7 @@ const ContactSection = () => {
           {/* Form Section */}
           <div className="p-5 lg:p-6">
             <form onSubmit={handleSubmit} className="space-y-4">
-              
+
               <div className="grid sm:grid-cols-2 gap-4">
                 <Input
                   placeholder="Full Name"
@@ -118,7 +118,7 @@ const ContactSection = () => {
             </form>
 
             <div className="mt-6 pt-5 border-t border-border space-y-4">
-              
+
               <div className="flex items-center gap-3 font-body text-sm text-muted-foreground">
                 <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                   <Phone size={16} className="text-primary" />
@@ -138,12 +138,11 @@ const ContactSection = () => {
               </div>
 
               <div className="flex items-center gap-3 font-body text-sm text-muted-foreground">
-                <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                  <MapPin size={16} className="text-primary" />
-                </div>
-                A-2, Opp. Badli Industrial Area, Suraj Park, Sector 18,
-Rohini, Delhi, 110042
-              </div>
+  <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+    <MapPin size={16} className="text-primary" />
+  </div>
+  HO: A-2, Suraj Park, Opp. Gate No. 2, Badli Industrial Area, Delhi - 110042 (India)
+</div>
 
             </div>
           </div>

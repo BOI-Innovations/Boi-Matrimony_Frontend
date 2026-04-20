@@ -601,9 +601,10 @@ const Home = ({ user, onSectionChange }: HomeProps) => {
   // LOAD EVERYTHING
   // ----------------------------------------------------
   useEffect(() => {
-    fetchProfiles();
+    // Hold suggestions API call for now; we will show the launch state instead.
     fetchConnectionStatus();
     fetchUnreadMessageCount();
+    setLoading(false);
 
     const name = getNameFromToken();
     if (name) setDisplayName(name);
@@ -797,13 +798,15 @@ const Home = ({ user, onSectionChange }: HomeProps) => {
         {!loading && !profileCompletion.incomplete && filteredProfiles.length === 0 && (
           <div className="col-span-full flex flex-col items-center justify-center p-8 text-center bg-muted/30 rounded-lg border-2 border-dashed">
             <div className="bg-primary/10 p-3 rounded-full mb-4">
-              <SearchX className="w-8 h-8 text-primary" />
+              <Heart className="w-8 h-8 text-primary" />
             </div>
-            <h3 className="text-xl font-semibold mb-2">No Matches Found</h3>
-            <p className="text-muted-foreground max-w-md mb-6">
-              No matches found according to your preference. Please change your preference to see more results.
-            </p>
-            <Button onClick={() => onSectionChange("partner-preference")}>Update Preferences</Button>
+            <h3 className="text-xl font-semibold mb-2">Welcome to BOI Matrimony</h3>
+            <div className="text-muted-foreground max-w-md space-y-3 mb-6">
+              <p>Registrations are now open! We invite you to become a part of this cultural and value-based matrimonial platform.</p>
+              <p>Some features like Matches, Interests, and Messaging will be available soon as we build a strong and verified community.</p>
+              <p>You will be notified via email as soon as these services are launched, so you don’t miss the beginning of your journey.</p>
+               <p>Thank you for your patience and support.</p>
+            </div>
           </div>
         )}
         {!loading &&

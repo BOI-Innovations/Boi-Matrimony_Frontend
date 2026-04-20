@@ -144,7 +144,7 @@ const Career = () => {
             A Selfless <span className="text-primary">Social Initiative</span>
           </h2>
           <p className="text-muted-foreground text-center max-w-3xl mx-auto mb-12">
-            Brahmin Matrimony is dedicated to the Brahmin community with the objective of preserving and promoting Sanatan culture, classical traditions, and strong family values.
+            BOI Matrimony is dedicated to the Brahmin community with the objective of preserving and promoting Sanatan culture, classical traditions, and strong family values.
             This platform is founded on the belief that cultural awareness and ethical conduct form the foundation of a stable and balanced married life.
             <br /><br />
             In today’s rapidly changing social landscape, many families find it difficult to identify a life partner who respects traditions while adapting to modern life.
