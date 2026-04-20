@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { X, MessageSquare, User, Loader2, MapPin, AlertCircle, Filter, SearchX } from "lucide-react";
+import { X, MessageSquare, User, Loader2, MapPin, AlertCircle, Filter, SearchX, Heart } from "lucide-react";
 import ProfileModal from "./ProfileModal";
 import { SubscriptionModal } from "@/components/common/SubscriptionModal";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -769,8 +769,9 @@ const Matches = ({ onViewProfile }: MatchesProps = {}) => {
   // Load on init
   // ----------------------------------------------------
   useEffect(() => {
-    fetchMatches(0);
+    // fetchMatches(0); // Hold suggestions API call for now; we will show the launch state instead.
     fetchConnectionStatus();
+    setLoading(false);
   }, []);
 
   // ----------------------------------------------------
@@ -984,13 +985,15 @@ const Matches = ({ onViewProfile }: MatchesProps = {}) => {
         {!loading && !profileCompletion.incomplete && filteredMatches.length === 0 && (
           <div className="col-span-full flex flex-col items-center justify-center p-8 text-center bg-muted/30 rounded-lg border-2 border-dashed">
             <div className="bg-primary/10 p-3 rounded-full mb-4">
-              <SearchX className="w-8 h-8 text-primary" />
+              <Heart className="w-8 h-8 text-primary" />
             </div>
-            <h3 className="text-xl font-semibold mb-2">No Matches Found</h3>
-            <p className="text-muted-foreground max-w-md mb-6">
-              No matches found according to your preference. Please change your preference to see more results.
-            </p>
-            <Button onClick={() => navigate("/dashboard?section=partner-preference")}>Update Preferences</Button>
+            <h3 className="text-xl font-semibold mb-2">Matches will be available soon</h3>
+            <div className="text-muted-foreground max-w-md space-y-3 mb-6">
+              <p>We are currently focusing on building a genuine and well-verified community.</p>
+              <p>Once registrations reach a strong base, personalized matches will be enabled for all users.</p>
+              <p>You will be notified via email as soon as this feature is launched.</p>
+              <p>Thank you for your patience and support.</p>
+            </div>
           </div>
         )}
         {!loading &&

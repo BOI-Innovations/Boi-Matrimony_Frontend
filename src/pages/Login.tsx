@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Textarea } from "@/components/ui/textarea";
 import bannerImage from "@/images/banner.png";
 import logoImage from "@/assets/boilogo.png";
+import indianWeddingImage from "@/assets/IndianWedding.jpeg";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -142,44 +143,42 @@ const Login = () => {
               </button>
             </div>
 
-          <div className="p-6 space-y-4 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-  {/* English */}
-  <p className="leading-relaxed text-justify font-semibold">
-    This platform has been established as a selfless social service for the Brahmin community, with the purpose of protecting, preserving, and promoting eternal culture, scriptural traditions, and family values.
-  </p>
+            <div className="p-6 space-y-4 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+              {/* English */}
+              <p className="leading-relaxed text-justify font-semibold">
+                This platform has been established as a selfless social service for the Brahmin community, with the purpose of protecting, preserving, and promoting eternal culture, scriptural traditions, and family values.
+              </p>
 
-  <p className="leading-relaxed text-justify mt-3 font-semibold">
-    Only individuals belonging to the Brahmin community will be allowed to register and use this platform. It is mandatory that every piece of information provided during registration is true, accurate, and authentic.
-  </p>
+              <p className="leading-relaxed text-justify mt-3 font-semibold">
+                Only individuals belonging to the Brahmin community will be allowed to register and use this platform. It is mandatory that every piece of information provided during registration is true, accurate, and authentic.
+              </p>
 
-  <p className="leading-relaxed text-justify mt-3 font-semibold">
-    Providing any false, misleading, or unverified information, or registering without belonging to the Brahmin community, will be considered a serious violation of the platform’s rules. In such a case, the concerned account may be suspended or canceled without prior notice, and legal action may be taken under the prevailing law if necessary.
-  </p>
+              <p className="leading-relaxed text-justify mt-3 font-semibold">
+                Providing any false, misleading, or unverified information, or registering without belonging to the Brahmin community, will be considered a serious violation of the platform’s rules. In such a case, the concerned account may be suspended or canceled without prior notice, and legal action may be taken under the prevailing law if necessary.
+              </p>
 
-  {/* Hindi */}
-  <p className="leading-relaxed text-justify text-gray-700 mt-6 font-semibold">
-    यह प्लेटफ़ॉर्म ब्राह्मण समाज हेतु एक निःस्वार्थ सामाजिक सेवा के रूप में स्थापित किया गया है, जिसका उद्देश्य सनातन संस्कृति, शास्त्रीय परंपराओं एवं पारिवारिक मूल्यों की रक्षा, संरक्षण और संवर्धन करना है।
-  </p>
+              {/* Hindi */}
+              <p className="leading-relaxed text-justify text-gray-700 mt-6 font-semibold">
+                यह प्लेटफ़ॉर्म ब्राह्मण समाज हेतु एक निःस्वार्थ सामाजिक सेवा के रूप में स्थापित किया गया है, जिसका उद्देश्य सनातन संस्कृति, शास्त्रीय परंपराओं एवं पारिवारिक मूल्यों की रक्षा, संरक्षण और संवर्धन करना है।
+              </p>
 
-  <p className="leading-relaxed text-justify text-gray-700 mt-3 font-semibold">
-    इस मंच पर केवल ब्राह्मण समुदाय से संबंधित व्यक्तियों को ही पंजीकरण एवं उपयोग की अनुमति प्राप्त होगी। पंजीकरण के दौरान प्रस्तुत की गई प्रत्येक जानकारी का सत्य, सटीक और प्रमाणिक होना अनिवार्य है।
-  </p>
+              <p className="leading-relaxed text-justify text-gray-700 mt-3 font-semibold">
+                इस मंच पर केवल ब्राह्मण समुदाय से संबंधित व्यक्तियों को ही पंजीकरण एवं उपयोग की अनुमति प्राप्त होगी। पंजीकरण के दौरान प्रस्तुत की गई प्रत्येक जानकारी का सत्य, सटीक और प्रमाणिक होना अनिवार्य है।
+              </p>
 
-  <p className="leading-relaxed text-justify text-gray-700 mt-3 font-semibold">
-    किसी भी प्रकार की असत्य, भ्रामक अथवा तथ्यहीन जानकारी देना, या ब्राह्मण समुदाय से संबंधित न होते हुए पंजीकरण करना, प्लेटफ़ॉर्म के नियमों का गंभीर उल्लंघन माना जाएगा। ऐसी स्थिति में संबंधित खाता बिना पूर्व सूचना निलंबित अथवा निरस्त किया जा सकता है तथा आवश्यक होने पर प्रचलित विधि के अंतर्गत विधिक कार्रवाई भी की जा सकती है।
-  </p>
+              <p className="leading-relaxed text-justify text-gray-700 mt-3 font-semibold">
+                किसी भी प्रकार की असत्य, भ्रामक अथवा तथ्यहीन जानकारी देना, या ब्राह्मण समुदाय से संबंधित न होते हुए पंजीकरण करना, प्लेटफ़ॉर्म के नियमों का गंभीर उल्लंघन माना जाएगा। ऐसी स्थिति में संबंधित खाता बिना पूर्व सूचना निलंबित अथवा निरस्त किया जा सकता है तथा आवश्यक होने पर प्रचलित विधि के अंतर्गत विधिक कार्रवाई भी की जा सकती है।
+              </p>
 
-  <div className="pt-4 border-t border-gray-200 flex justify-end">
-    <Button
-      onClick={() => setShowNotice(false)}
-      className="bg-orange-600 hover:bg-orange-700 text-white"
-    >
-      I Understand
-    </Button>
-  </div>
-</div>
-
-
+              <div className="pt-4 border-t border-gray-200 flex justify-end">
+                <Button
+                  onClick={() => setShowNotice(false)}
+                  className="bg-orange-600 hover:bg-orange-700 text-white"
+                >
+                  I Understand
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -187,12 +186,12 @@ const Login = () => {
       <main className="flex-grow flex items-center justify-center p-6">
         <div
           className="flex flex-col lg:flex-row w-full max-w-5xl rounded-2xl shadow-xl border border-gray-200 overflow-hidden bg-white animate-fade-in relative"
-          style={{ maxHeight: "550px" }} 
+          style={{ maxHeight: "520px" }}
         >
           {/* LEFT IMAGE SECTION (hidden on small screens) */}
           <div className="hidden lg:flex lg:w-1/2 h-full">
             <img
-              src={bannerImage}
+              src={indianWeddingImage}
               alt="Matrimony Love"
               className="object-cover w-full h-full"
             />
@@ -210,7 +209,7 @@ const Login = () => {
                     <img
                       src={logoImage}
                       alt="BOI Logo"
-                      className="w-40 h-auto object-contain" 
+                      className="w-40 h-auto object-contain"
                     />
                   </div>
                   <p className="text-sm text-gray-500">

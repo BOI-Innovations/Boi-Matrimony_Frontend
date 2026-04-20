@@ -10,7 +10,7 @@ interface Milestone {
 const milestones: Milestone[] = [
   {
     year: "2026",
-    title: "Brahmin Matrimony Platform officially launched as a social initiative",
+    title: "BOI Matrimony Platform officially launched as a social initiative",
     position: "bottom",
   },
   {

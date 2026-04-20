@@ -51,7 +51,7 @@ const socialLinks = [
   { icon: Youtube, href: "#", label: "YouTube" },
 ];
 
-const Contact = () => {  
+const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -70,11 +70,11 @@ const Contact = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
 
- <PageBanner
-  title="Contact Us"
-  subtitle="Reach out to us with trust and confidence. We’re dedicated to assisting you with care, respect, and a commitment to preserving the values, traditions, and harmony that guide every family connection."
-  backgroundImage="https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=1920&h=600&fit=crop"
-/>
+      <PageBanner
+        title="Contact Us"
+        subtitle="Reach out to us with trust and confidence. We’re dedicated to assisting you with care, respect, and a commitment to preserving the values, traditions, and harmony that guide every family connection."
+        backgroundImage="https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=1920&h=600&fit=crop"
+      />
 
 
 
@@ -89,13 +89,13 @@ const Contact = () => {
             className="text-center max-w-4xl mx-auto"
           >
             <h3 className="text-sm font-semibold text-saffron uppercase tracking-widest">
-              BRAHMIN MATRIMONY • A COMMUNITY INITIATIVE
+              BOI Matrimony • A COMMUNITY INITIATIVE
             </h3>
             <h2 className="mt-4 text-3xl font-heading font-bold text-foreground md:text-4xl">
               A Sacred Platform Led by Community, Not Commerce
             </h2>
             <p className="mt-6 text-muted-foreground leading-relaxed">
-              Brahmin Matrimony is a selfless initiative designed to help Brahmin families find respectful, value-based, and tradition-aligned relationships. This platform is not a business it is guided by love, integrity, and a commitment to preserving our cultural heritage. The one-time contribution of ₹2,100 ensures smooth functioning of the portal and supports volunteers who work selflessly for the community.
+              BOI Matrimony is a selfless initiative designed to help Brahmin families find respectful, value-based, and tradition-aligned relationships. This platform is not a business it is guided by love, integrity, and a commitment to preserving our cultural heritage. The one-time contribution of ₹2,100 ensures smooth functioning of the portal and supports volunteers who work selflessly for the community.
             </p>
           </motion.div>
         </div>
@@ -105,7 +105,7 @@ const Contact = () => {
       <section className="py-16 bg-gradient-to-br from-primary/5 to-accent/5">
         <div className="container">
           <div className="grid lg:grid-cols-2 gap-8">
-            
+
             {/* Left Column */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -125,8 +125,8 @@ const Contact = () => {
                 <div>
                   <h3 className="font-semibold text-foreground mb-1">Office Address</h3>
                   <p className="text-muted-foreground text-sm">
-                    A-2, Opp. Badli Industrial Area, Suraj Park, Sector 18,<br />
-                    Rohini, Delhi, 110042
+                    HO: A-2, Suraj Park, Opp. Gate No. 2, Badli Industrial Area,<br />
+                    Delhi - 110042 (India)
                   </p>
                 </div>
               </div>
