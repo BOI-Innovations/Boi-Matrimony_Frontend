@@ -157,7 +157,7 @@ const Login = () => {
               </p>
 
               <p className="leading-relaxed text-justify mt-3 font-semibold">
-                Providing any false, misleading, or unverified information, or registering without belonging to the Brahmin community, will be considered a serious violation of the platform’s rules. In such a case, the concerned account may be suspended or canceled without prior notice, and legal action may be taken under the prevailing law if necessary.
+                Providing any false, misleading, or unverified information, or registering without belonging to the Brahmin community, will be considered a serious violation of the platform’s rules. In such a case, the concerned account may be suspended or canceled without prior notice, and legal action will be taken if necessary.
               </p>
 
               {/* Hindi */}
@@ -170,7 +170,7 @@ const Login = () => {
               </p>
 
               <p className="leading-relaxed text-justify text-gray-700 mt-3 font-semibold">
-                किसी भी प्रकार की असत्य, भ्रामक अथवा तथ्यहीन जानकारी देना, या ब्राह्मण समुदाय से संबंधित न होते हुए पंजीकरण करना, प्लेटफ़ॉर्म के नियमों का गंभीर उल्लंघन माना जाएगा। ऐसी स्थिति में संबंधित खाता बिना पूर्व सूचना निलंबित अथवा निरस्त किया जा सकता है तथा आवश्यक होने पर प्रचलित विधि के अंतर्गत कानूनी कार्रवाई भी की जा सकती है।
+                किसी भी प्रकार की असत्य, भ्रामक अथवा तथ्यहीन जानकारी देना, या ब्राह्मण समुदाय से संबंधित न होते हुए पंजीकरण करना, प्लेटफ़ॉर्म के नियमों का गंभीर उल्लंघन माना जाएगा। ऐसी स्थिति में संबंधित खाता बिना पूर्व सूचना निलंबित अथवा निरस्त किया जा सकता है तथा आवश्यक होने पर प्रचलित विधि के अंतर्गत कानूनी कार्रवाई की जाएगी।
               </p>
 
               <div className="pt-4 border-t border-gray-200 flex justify-end">
