@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import FullImageViewer from "@/components/common/FullImageViewer";
+import { useNavigate } from "react-router-dom";
+import CreateProfileModal from "@/components/common/CreateProfileModal";
 
 const maritalStatusMap: { [key: string]: string } = {
   UNMARRIED: "Unmarried",
@@ -27,6 +29,8 @@ const ProfileInfo = () => {
   const [uploading, setUploading] = useState(false);
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [isImageOpen, setIsImageOpen] = useState(false);
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -46,8 +50,7 @@ const ProfileInfo = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
-
-        if (res.ok && data.payload) {
+          if (res.ok && data.payload) {
           const p = data.payload;
           setUser({
             firstName: p.firstName,
@@ -68,7 +71,12 @@ const ProfileInfo = () => {
           });
           await fetchProfileImage(token);
         } else {
-          console.error("Failed to fetch profile:", data.message);
+          // If profile not found, show create profile modal so user can create one
+          if (data?.statusCode === 404 && data?.message?.toLowerCase?.().includes("profile not found")) {
+            setCreateModalOpen(true);
+          } else {
+            console.error("Failed to fetch profile:", data.message);
+          }
         }
       } catch (err) {
         console.error("Error fetching profile:", err);
@@ -145,6 +153,11 @@ const ProfileInfo = () => {
 
   const handleButtonClick = () => fileInputRef.current?.click();
 
+  const handleCreateProfile = () => {
+    setCreateModalOpen(false);
+    navigate("/dashboard?section=basic-info");
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-[60vh]">
@@ -155,9 +168,14 @@ const ProfileInfo = () => {
 
   if (!user) {
     return (
-      <div className="text-center text-muted-foreground py-10">
-        Failed to load profile.
-      </div>
+      <>
+        <div className="text-center text-muted-foreground py-10">Failed to load profile.</div>
+        <CreateProfileModal
+          open={createModalOpen}
+          onOpenChange={setCreateModalOpen}
+          onCreate={handleCreateProfile}
+        />
+      </>
     );
   }
 

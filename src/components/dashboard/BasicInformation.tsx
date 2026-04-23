@@ -291,7 +291,7 @@ const BasicInformation = () => {
           dateOfBirth: p.dateOfBirth,
           timeOfBirth: p.timeOfBirth,
           placeOfBirth: p.placeOfBirth,
-          religion: p.religion,
+          religion: p.religion || "HINDU",
           caste: p.caste,
           subCaste: p.subCaste,
           maritalStatus: p.maritalStatus,
@@ -378,30 +378,30 @@ const BasicInformation = () => {
   };
 
   // Validation function
-  const validateForm = () => {
+  const validateForm = (data = formData) => {
     const errors = new Set<string>();
 
     // Validate First Name
-    const firstNameError = validateNameField(formData.firstName, "First Name");
+    const firstNameError = validateNameField(data.firstName, "First Name");
     if (firstNameError) {
       errors.add("firstName");
     }
 
     // Validate Last Name
-    const lastNameError = validateNameField(formData.lastName, "Last Name");
+    const lastNameError = validateNameField(data.lastName, "Last Name");
     if (lastNameError) {
       errors.add("lastName");
     }
 
     // Validate Place of Birth
-    const placeOfBirthError = validatePlaceOfBirth(formData.placeOfBirth);
+    const placeOfBirthError = validatePlaceOfBirth(data.placeOfBirth);
     if (placeOfBirthError) {
       errors.add("placeOfBirth");
     }
 
     // generic required fields (diseaseDetails handled separately)
     REQUIRED_FIELDS.forEach((field) => {
-      const value = formData[field];
+      const value = data[field];
       if (
         value === null ||
         value === undefined ||
@@ -414,8 +414,8 @@ const BasicInformation = () => {
 
     // diseaseDetails required only when hasDisease is true
     const hasDisease =
-      formData.hasDisease === true || formData.hasDisease === "true";
-    if (hasDisease && !formData.diseaseDetails) {
+      data.hasDisease === true || data.hasDisease === "true";
+    if (hasDisease && !data.diseaseDetails) {
       errors.add("diseaseDetails");
     }
 
@@ -455,8 +455,14 @@ const BasicInformation = () => {
       return;
     }
 
+    // Ensure religion is always set to "HINDU"
+    const formDataWithReligion = {
+      ...formData,
+      religion: "HINDU",
+    };
+
     // Validate form first
-    const errors = validateForm();
+    const errors = validateForm(formDataWithReligion);
     if (errors.size > 0) {
       const firstErrorField = Array.from(errors)[0];
       const label = FIELD_LABELS[firstErrorField] || firstErrorField;
@@ -468,7 +474,7 @@ const BasicInformation = () => {
       return;
     }
 
-    if (!formData.declarationAccepted) {
+    if (!formDataWithReligion.declarationAccepted) {
       toast({
         title: "Validation Error",
         description: "You must accept the declaration before saving.",
@@ -483,15 +489,16 @@ const BasicInformation = () => {
 
     // ✅ ensure correct key name and handle array format
     const updatedData = {
-      ...formData,
-      profileCreatedFor: formData.profileCreatedFor || user.profileCreatedFor,
+      ...formDataWithReligion,
+      profileCreatedFor: formDataWithReligion.profileCreatedFor || user.profileCreatedFor,
       languagesKnown:
-        typeof formData.languagesKnown === "string"
-          ? formData.languagesKnown
+        typeof formDataWithReligion.languagesKnown === "string"
+          ? formDataWithReligion.languagesKnown
               .split(",")
               .map((lang: string) => lang.trim())
               .filter((l: string) => l !== "")
-          : formData.languagesKnown,
+          : formDataWithReligion.languagesKnown,
+      religion: "HINDU", // Explicitly include religion in the payload
     };
 
     try {
@@ -605,6 +612,9 @@ const BasicInformation = () => {
   const renderItems = (items: typeof infoItems) => {
     return items.map((item, index) => {
       if (item.field === "diseaseDetails" && !formData.hasDisease) return null;
+      // Skip religion field if it appears in items
+      if (item.field === "religion") return null;
+      
       return (
         <div key={index} className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 p-3 md:p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-smooth">
           <span className="font-medium text-muted-foreground text-sm">
@@ -617,7 +627,7 @@ const BasicInformation = () => {
             (item.field === "profileCreatedFor" && (
               <div className="w-full sm:w-[60%]">
                 <Select
-                  value={formData.profileCreatedFor}
+                  value={formData.profileCreatedFor ?? ""}
                   onValueChange={(v) => {
                     handleChange("profileCreatedFor", v);
                     if (v) validationErrors.delete("profileCreatedFor");
@@ -650,7 +660,7 @@ const BasicInformation = () => {
             (item.field === "caste" && (
               <div className="w-full sm:w-[60%]">
                 <Select
-                  value={formData.caste}
+                  value={formData.caste ?? ""}
                   onValueChange={(v) => {
                     handleChange("caste", v);
                     if (v) validationErrors.delete("caste");
@@ -683,7 +693,7 @@ const BasicInformation = () => {
             (item.field === "subCaste" && (
               <div className="w-full sm:w-[60%]">
                 <Select
-                  value={formData.subCaste}
+                  value={formData.subCaste ?? ""}
                   onValueChange={(v) => {
                     handleChange("subCaste", v);
                     if (v) validationErrors.delete("subCaste");
@@ -716,7 +726,7 @@ const BasicInformation = () => {
             (item.field === "heightIn" && (
               <div className="w-full sm:w-[60%]">
                 <Select
-                  value={formData.heightIn}
+                  value={formData.heightIn ?? ""}
                   onValueChange={(v) => {
                     handleChange("heightIn", v);
                     if (v) validationErrors.delete("heightIn");
@@ -749,7 +759,7 @@ const BasicInformation = () => {
             (item.field === "weight" && (
               <div className="w-full sm:w-[60%]">
                 <Select
-                  value={formData.weight}
+                  value={formData.weight ?? ""}
                   onValueChange={(v) => {
                     handleChange("weight", v);
                     if (v) validationErrors.delete("weight");
@@ -782,7 +792,7 @@ const BasicInformation = () => {
             (item.field === "motherTongue" && (
               <div className="w-full sm:w-[60%]">
                 <Select
-                  value={formData.motherTongue}
+                  value={formData.motherTongue ?? ""}
                   onValueChange={(v) => {
                     handleChange("motherTongue", v);
                     if (v) validationErrors.delete("motherTongue");
@@ -870,7 +880,7 @@ const BasicInformation = () => {
             (item.field === "gothra" && (
               <div className="w-full sm:w-[60%]">
                 <Select
-                  value={formData.gothra}
+                  value={formData.gothra ?? ""}
                   onValueChange={(v) => {
                     handleChange("gothra", v);
                     if (v) validationErrors.delete("gothra");
@@ -903,7 +913,7 @@ const BasicInformation = () => {
             (item.field === "star" && (
               <div className="w-full sm:w-[60%]">
                 <Select
-                  value={formData.star}
+                  value={formData.star ?? ""}
                   onValueChange={(v) => handleChange("star", v)}
                   onOpenChange={(open) => {
                     if (open && starOptions.length === 0) {
@@ -933,7 +943,7 @@ const BasicInformation = () => {
             (item.field === "rashi" && (
               <div className="w-full sm:w-[60%]">
                 <Select
-                  value={formData.rashi}
+                  value={formData.rashi ?? ""}
                   onValueChange={(v) => handleChange("rashi", v)}
                   onOpenChange={(open) => {
                     if (open && rashiOptions.length === 0) {
@@ -963,7 +973,7 @@ const BasicInformation = () => {
             (item.field === "gender" && (
               <div className="w-full sm:w-[60%]">
                 <Select
-                  value={formData.gender}
+                  value={formData.gender ?? ""}
                   onValueChange={(v) => {
                     handleChange("gender", v);
                     if (v) validationErrors.delete("gender");
@@ -985,7 +995,7 @@ const BasicInformation = () => {
             (item.field === "manglik" && (
               <div className="w-full sm:w-[60%]">
                 <Select
-                  value={formData.manglik}
+                  value={formData.manglik ?? ""}
                   onValueChange={(v) => {
                     handleChange("manglik", v);
                     if (v) validationErrors.delete("manglik");
@@ -1007,7 +1017,7 @@ const BasicInformation = () => {
             (item.field === "dietaryHabits" && (
               <div className="w-full sm:w-[60%]">
                 <Select
-                  value={formData.dietaryHabits}
+                  value={formData.dietaryHabits ?? ""}
                   onValueChange={(v) => {
                     handleChange("dietaryHabits", v);
                     if (v) validationErrors.delete("dietaryHabits");
@@ -1029,7 +1039,7 @@ const BasicInformation = () => {
             (item.field === "drinkingHabits" && (
               <div className="w-full sm:w-[60%]">
                 <Select
-                  value={formData.drinkingHabits}
+                  value={formData.drinkingHabits ?? ""}
                   onValueChange={(v) => {
                     handleChange("drinkingHabits", v);
                     if (v) validationErrors.delete("drinkingHabits");
@@ -1051,7 +1061,7 @@ const BasicInformation = () => {
             (item.field === "smokingHabits" && (
               <div className="w-full sm:w-[60%]">
                 <Select
-                  value={formData.smokingHabits}
+                  value={formData.smokingHabits ?? ""}
                   onValueChange={(v) => {
                     handleChange("smokingHabits", v);
                     if (v) validationErrors.delete("smokingHabits");
@@ -1073,7 +1083,7 @@ const BasicInformation = () => {
             (item.field === "maritalStatus" && (
               <div className="w-full sm:w-[60%]">
                 <Select
-                  value={formData.maritalStatus}
+                  value={formData.maritalStatus ?? ""}
                   onValueChange={(v) => {
                     handleChange("maritalStatus", v);
                     if (v) validationErrors.delete("maritalStatus");
@@ -1095,7 +1105,7 @@ const BasicInformation = () => {
             (item.field === "physicalStatus" && (
               <div className="w-full sm:w-[60%]">
                 <Select
-                  value={formData.physicalStatus}
+                  value={formData.physicalStatus ?? ""}
                   onValueChange={(v) => {
                     handleChange("physicalStatus", v);
                     if (v) validationErrors.delete("physicalStatus");
@@ -1248,7 +1258,7 @@ const BasicInformation = () => {
         </CardHeader>
         <CardContent className="p-4 md:p-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-            {/* Religion field */}
+            {/* Religion field - hardcoded as Hindu */}
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 p-3 md:p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-smooth">
               <span className="font-medium text-muted-foreground text-sm">
                 Religion (धर्म)
