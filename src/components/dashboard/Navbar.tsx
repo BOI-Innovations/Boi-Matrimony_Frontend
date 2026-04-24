@@ -80,10 +80,10 @@ const response = await fetch(`${baseUrl}/api/images/getLoggedUserProfileImage`, 
   }, []);
 
   const handleLogout = () => {
-    toast({
-      title: "Logged out",
-      description: "You have been successfully logged out.",
-    });
+    // toast({
+    //   title: "Logged out",
+    //   description: "You have been successfully logged out.",
+    // });
     sessionStorage.removeItem("token");
     navigate("/");
   };

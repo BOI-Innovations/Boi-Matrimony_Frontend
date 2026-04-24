@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Edit, Heart, Loader2, Save } from "lucide-react";
@@ -27,6 +28,7 @@ import {
 import { Check, ChevronsUpDown } from "lucide-react";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import CreateProfileModal from "@/components/common/CreateProfileModal";
 
 const REQUIRED_FIELDS = [
   "minAge",
@@ -47,7 +49,6 @@ const REQUIRED_FIELDS = [
   "employedIn",
   "occupations",
   "annualIncome",
-  "aboutMyPartner",
 ];
 
 const FIELD_LABELS: Record<string, string> = {
@@ -103,7 +104,9 @@ const PartnerPreference = () => {
   const [occupationCategories, setOccupationCategories] = useState<any[]>([]);
   const [openOccupation, setOpenOccupation] = useState(false);
   const [educationCategories, setEducationCategories] = useState<any[]>([]);
+  const [showCreateProfileModal, setShowCreateProfileModal] = useState(false);
 
+  const navigate = useNavigate();
   const token = sessionStorage.getItem("token");
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -212,7 +215,7 @@ const PartnerPreference = () => {
     const entering = !isEditing;
     setIsEditing(entering);
     if (entering) {
-      setFormData({...prefs}); // Create new object to ensure state update
+      setFormData({...prefs, religion: "HINDU"}); // Create new object to ensure state update and hardcode religion
       prefetchOptionsForCurrentValues();
       
       // Fetch education and occupation categories when entering edit mode
@@ -528,38 +531,37 @@ const PartnerPreference = () => {
       return;
     }
 
-    try {
-      setSaving(true);
-      const response = await fetch(`${baseUrl}/api/profile-preference/save`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(formData),
+    setSaving(true);
+    // Ensure religion is always HINDU
+    formData.religion = "HINDU";
+    const response = await fetch(`${baseUrl}/api/profile-preference/save`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(formData),
+    });
+    
+    const data = await response.json();
+    
+    if (data.statusCode === 200 && data.payload) {
+      setPrefs(data.payload || {});
+      toast({
+        title: "Success",
+        description: "Preferences saved successfully!",
       });
-      
-      const data = await response.json();
-      
-      if (response.ok) {
-        setPrefs(data.payload || {});
-        toast({
-          title: "Success",
-          description: "Preferences saved successfully!",
-        });
-        setIsEditing(false);
-      } else {
-        throw new Error(data.message || "Failed to save preferences");
-      }
-    } catch (err: any) {
+      setIsEditing(false);
+    } else if (data.statusCode === 404 && data.message === "Profile not found") {
+      setShowCreateProfileModal(true);
+    } else {
       toast({
         title: "Error",
-        description: err.message || "Failed to save preferences. Try again.",
+        description: data.message || "Failed to save preferences.",
         variant: "destructive",
       });
-    } finally {
-      setSaving(false);
     }
+    setSaving(false);
   };
 
   // RENDER FIELD
@@ -1385,6 +1387,17 @@ const PartnerPreference = () => {
             </CardContent>
           </Card>
         </>
+      )}
+
+      {showCreateProfileModal && (
+        <CreateProfileModal
+          open={showCreateProfileModal}
+          onOpenChange={setShowCreateProfileModal}
+          onCreate={() => {
+            setShowCreateProfileModal(false);
+            navigate("/dashboard?section=basic-info");
+          }}
+        />
       )}
     </div>
   );

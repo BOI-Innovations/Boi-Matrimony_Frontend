@@ -1,12 +1,17 @@
+import React, { useRef, useState, useEffect } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogHeader,
-  AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Sparkles,
+  ArrowRight,
+  ChevronDown,
+  Users,
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface CreateProfileModalProps {
   open: boolean;
@@ -19,51 +24,132 @@ export default function CreateProfileModal({
   onOpenChange,
   onCreate,
 }: CreateProfileModalProps) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [showScrollIndicator, setShowScrollIndicator] = useState(false);
+
+  const checkScroll = () => {
+    if (scrollRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = scrollRef.current;
+      const isScrollable = scrollHeight > clientHeight;
+      const isNotAtBottom = scrollTop + clientHeight < scrollHeight - 10;
+      setShowScrollIndicator(isScrollable && isNotAtBottom);
+    }
+  };
+
+  useEffect(() => {
+    if (open) {
+      const timer = setTimeout(checkScroll, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [open]);
+
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="w-[calc(100%-2rem)] px-4 max-w-md sm:max-w-lg rounded-lg overflow-hidden bg-white ring-1 ring-slate-200 shadow-lg">
-        <div className="p-6 sm:p-8">
-          <h3 className="text-2xl font-bold">Let's set up your profile</h3>
-          <p className="text-sm text-muted-foreground mt-2">
-            Welcome! We couldn't find a profile for you. Let's create one so you
-            can start exploring.
-          </p>
+      <AlertDialogContent className="w-[calc(100%-2rem)] p-0 max-w-sm bg-white border-none shadow-2xl rounded-[2rem] max-h-[85vh] overflow-hidden">
+        
+        <style dangerouslySetInnerHTML={{ __html: `
+          .no-scrollbar::-webkit-scrollbar { display: none; }
+          .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        `}} />
 
-          <div className="mt-4 grid grid-cols-1 gap-3">
-            <div className="flex items-start gap-3 p-3 rounded-lg bg-gray-50 border">
-              <div className="w-10 h-10 rounded-md bg-white flex items-center justify-center text-primary text-lg shadow">
-                🔒
-              </div>
-              <div>
-                <div className="text-sm font-medium">Secure Identity</div>
-                <div className="text-xs text-muted-foreground">Verified access to all platform features.</div>
-              </div>
-            </div>
+        <div className="flex flex-col max-h-[85vh]">
 
-            <div className="flex items-start gap-3 p-3 rounded-lg bg-gray-50 border">
-              <div className="w-10 h-10 rounded-md bg-white flex items-center justify-center text-primary text-lg shadow">
-                ✨
-              </div>
-              <div>
-                <div className="text-sm font-medium">Personalized Feed</div>
-                <div className="text-xs text-muted-foreground">Content tailored to your professional interests.</div>
-              </div>
-            </div>
-          </div>
+          {/* Top Accent */}
+          <div className="h-1 w-full bg-primary/20" />
 
-          <div className="mt-6 flex flex-col sm:flex-row gap-3">
-            <AlertDialogAction
-              onClick={onCreate}
-              className="w-full sm:w-auto bg-primary text-primary-foreground px-5 py-2 rounded-md shadow"
+          <div className="relative flex-1 overflow-hidden">
+            <motion.div
+              ref={scrollRef}
+              onScroll={checkScroll}
+              className="overflow-y-auto no-scrollbar px-6 py-6"
             >
-              Get Started →
-            </AlertDialogAction>
-            <AlertDialogCancel className="w-full sm:w-auto bg-slate-100 text-slate-700 px-5 py-2 rounded-md">
-              Not now
-            </AlertDialogCancel>
+              {/* Header */}
+              <div className="text-center mb-6">
+                <h3 className="text-xl font-bold text-slate-900 tracking-tight">
+                  Let's create your profile ✨
+                </h3>
+                <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
+                  Welcome! You're just one step away from a personalized experience and exclusive community access.
+                </p>
+              </div>
+
+              {/* Features */}
+              <div className="grid grid-cols-1 gap-3">
+
+                {/* Card 1 */}
+                <div className="flex items-start gap-3 p-4 rounded-2xl bg-primary/[0.03] border border-primary/10">
+                  <div className="bg-white p-1.5 rounded-lg shadow-sm">
+                    <Users size={18} className="text-primary" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[13px] font-bold text-slate-800">Genuine Connections</span>
+                    <span className="text-[11px] text-slate-600 leading-tight">
+                      Find and interact with real, dedicated individuals who share your unique background and values.
+                    </span>
+                  </div>
+                </div>
+
+                {/* Card 2 */}
+                <div className="flex items-start gap-3 p-4 rounded-2xl bg-primary/[0.03] border border-primary/10">
+                  <div className="bg-white p-1.5 rounded-lg shadow-sm">
+                    <Sparkles size={18} className="text-primary" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[13px] font-bold text-slate-800">Curated Matching</span>
+                    <span className="text-[11px] text-slate-600 leading-tight">
+                      Receive a personalized feed and connection suggestions tailored precisely to your cultural and traditional values.
+                    </span>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Trust Line */}
+              <p className="text-[10px] text-center font-medium text-slate-400 uppercase tracking-widest mt-6">
+                A respectful space built on shared principles
+              </p>
+
+              <div className="h-2" />
+            </motion.div>
+
+            {/* Scroll Indicator */}
+            <AnimatePresence>
+              {showScrollIndicator && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="absolute bottom-3 right-4"
+                >
+                  <motion.div
+                    animate={{ y: [0, 5, 0] }}
+                    transition={{ repeat: Infinity, duration: 1.2 }}
+                    className="bg-primary text-white p-1 rounded-full shadow-lg"
+                  >
+                    <ChevronDown size={16} />
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
-          <p className="text-xs text-muted-foreground mt-4">Takes less than 2 minutes to complete.</p>
+          {/* Footer */}
+          <div className="p-6 border-t bg-white">
+            <div className="flex flex-col gap-3">
+              <AlertDialogAction
+                onClick={onCreate}
+                className="h-12 bg-primary hover:bg-primary/90 text-white rounded-xl flex items-center justify-center gap-2 font-bold transition-transform active:scale-95 shadow-none border-none"
+              >
+                Create My Profile
+                <ArrowRight size={18} />
+              </AlertDialogAction>
+
+              <AlertDialogCancel className="h-10 text-xs font-semibold text-slate-500 hover:text-slate-600 bg-slate-100 hover:bg-slate-200 border-none rounded-xl transition-colors shadow-none">
+                Maybe later
+              </AlertDialogCancel>
+            </div>
+          </div>
+
         </div>
       </AlertDialogContent>
     </AlertDialog>

@@ -66,10 +66,10 @@ const Login = () => {
         sessionStorage.setItem("phoneNumber", data.payload.phoneNumber);
         sessionStorage.setItem("roles", JSON.stringify(data.payload.roles));
 
-        toast({
-          title: "Welcome back!",
-          description: data.message || "Login successful",
-        });
+        // toast({
+        //   title: "Welcome back!",
+        //   description: data.message || "Login successful",
+        // });
 
         navigate("/dashboard");
       } else {

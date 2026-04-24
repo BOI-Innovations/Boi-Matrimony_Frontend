@@ -12,6 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useNavigate } from "react-router-dom";
+import CreateProfileModal from "@/components/common/CreateProfileModal";
 
 interface EducationCategory {
   id: number;
@@ -73,6 +75,7 @@ const EducationOccupation = () => {
   const [editMode, setEditMode] = useState(false);
   const [error, setError] = useState("");
   const [validationErrors, setValidationErrors] = useState<Set<string>>(new Set());
+  const [showCreateProfileModal, setShowCreateProfileModal] = useState(false);
 
   // Dropdown states
   const [educationCategories, setEducationCategories] = useState<EducationCategory[]>([]);
@@ -81,6 +84,8 @@ const EducationOccupation = () => {
   const [currencyCountries, setCurrencyCountries] = useState<CurrencyCountry[]>([]);
   const [countries, setCountries] = useState<Country[]>([]);
   const [loadingDropdown, setLoadingDropdown] = useState<string | null>(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -299,6 +304,8 @@ const EducationOccupation = () => {
           title: "Updated Successfully",
           description: "Your education & occupation details have been saved.",
         });
+      } else if (data.statusCode === 404 && data.message === "Profile not found") {
+        setShowCreateProfileModal(true);
       } else {
         throw new Error(data.message || "Failed to update.");
       }
@@ -812,6 +819,17 @@ const EducationOccupation = () => {
           </div>
         </CardContent>
       </Card>
+
+      {showCreateProfileModal && (
+        <CreateProfileModal
+          open={showCreateProfileModal}
+          onOpenChange={setShowCreateProfileModal}
+          onCreate={() => {
+            setShowCreateProfileModal(false);
+            navigate("/dashboard?section=basic-info");
+          }}
+        />
+      )}
     </div>
   );
 };

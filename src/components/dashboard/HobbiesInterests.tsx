@@ -18,6 +18,8 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
+import CreateProfileModal from "@/components/common/CreateProfileModal";
 
 interface HobbiesData {
   id: number;
@@ -38,6 +40,9 @@ const HobbiesInterests = () => {
   const [saving, setSaving] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [error, setError] = useState("");
+  const [showCreateProfileModal, setShowCreateProfileModal] = useState(false);
+
+  const navigate = useNavigate();
 
   // ✅ Fetch hobbies data
   useEffect(() => {
@@ -129,6 +134,8 @@ const HobbiesInterests = () => {
           title: "Updated Successfully",
           description: "Your hobbies & interests have been saved.",
         });
+      } else if (data.statusCode === 404 && data.message === "Profile not found") {
+        setShowCreateProfileModal(true);
       } else {
         toast({
           title: "Update Failed",
@@ -371,6 +378,17 @@ const HobbiesInterests = () => {
           {renderOther("otherFood", "Other Food (अन्य भोजन)")}
         </CardContent>
       </Card>
+
+      {showCreateProfileModal && (
+        <CreateProfileModal
+          open={showCreateProfileModal}
+          onOpenChange={setShowCreateProfileModal}
+          onCreate={() => {
+            setShowCreateProfileModal(false);
+            navigate("/dashboard?section=basic-info");
+          }}
+        />
+      )}
     </div>
   );
 };

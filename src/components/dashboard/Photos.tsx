@@ -10,6 +10,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useNavigate } from "react-router-dom";
+import CreateProfileModal from "@/components/common/CreateProfileModal";
 
 /* ------------------------------------------------------------
  * 🔹 Main Photos Component
@@ -19,6 +21,9 @@ interface PhotosProps {
 }
 
 const Photos = ({ user }: PhotosProps) => {
+  const navigate = useNavigate();
+  const [showCreateProfileModal, setShowCreateProfileModal] = useState(false);
+
   // Profile Image States
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -156,10 +161,14 @@ const Photos = ({ user }: PhotosProps) => {
         const imgUrl = URL.createObjectURL(file);
         setProfileImage(imgUrl);
       } else {
-        toast({
-          description: data.message || "Failed to upload image",
-          variant: "destructive",
-        });
+        if (data.statusCode === 404 && data.message === "Profile not found") {
+          setShowCreateProfileModal(true);
+        } else {
+          toast({
+            description: data.message || "Failed to upload image",
+            variant: "destructive",
+          });
+        }
       }
     } catch (err) {
       console.error("Error uploading image:", err);
@@ -223,11 +232,15 @@ const Photos = ({ user }: PhotosProps) => {
           )
         );
       } else {
-        toast({
-          description: data.message || "Failed to upload image",
-          variant: "destructive",
-        });
-        setGalleryImages((prev) => prev.filter((img) => img.id !== tempId));
+        if (data.statusCode === 404 && data.message === "Profile not found") {
+          setShowCreateProfileModal(true);
+        } else {
+          toast({
+            description: data.message || "Failed to upload image",
+            variant: "destructive",
+          });
+          setGalleryImages((prev) => prev.filter((img) => img.id !== tempId));
+        }
       }
     } catch (err) {
       console.error("Error uploading gallery image:", err);
@@ -503,6 +516,16 @@ const Photos = ({ user }: PhotosProps) => {
         shape={viewerShape}
         onOpenChange={(open) => {
           if (!open) setFullImage(null);
+        }}
+      />
+
+      {/* Create Profile Modal */}
+      <CreateProfileModal
+        open={showCreateProfileModal}
+        onOpenChange={setShowCreateProfileModal}
+        onCreate={() => {
+          setShowCreateProfileModal(false);
+          navigate("/dashboard?section=basic-info");
         }}
       />
     </div>

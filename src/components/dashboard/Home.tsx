@@ -25,6 +25,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ProfileModal from "./ProfileModal"; // added import
 import SponsoredAdsCarousel from "../common/SponsoredAdCard";
 import { SubscriptionModal } from "@/components/common/SubscriptionModal";
+import CreateProfileModal from "@/components/common/CreateProfileModal";
 
 interface HomeProps {
   user: User;
@@ -276,6 +277,9 @@ const Home = ({ user, onSectionChange }: HomeProps) => {
   const [hasActiveSubscription, setHasActiveSubscription] = useState<boolean>(false);
   const [subscriptionChecked, setSubscriptionChecked] = useState<boolean>(false);
   const [showSubscriptionModal, setShowSubscriptionModal] = useState<boolean>(false);
+  // profile creation state
+  const [showCreateProfileModal, setShowCreateProfileModal] = useState<boolean>(false);
+  const [profileExists, setProfileExists] = useState<boolean | null>(null);
 
   const checkSubscription = async (): Promise<boolean> => {
     if (!token) {
@@ -300,6 +304,46 @@ const Home = ({ user, onSectionChange }: HomeProps) => {
       setHasActiveSubscription(false);
       setSubscriptionChecked(true);
       return false;
+    }
+  };
+
+  // ------------------------------------------------
+  // CHECK IF PROFILE EXISTS
+  // ------------------------------------------------
+  const checkProfileExists = async () => {
+    if (!token) {
+      setProfileExists(false);
+      setShowCreateProfileModal(true);
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        `${baseUrl.replace("9096", "9099")}/api/profiles/me`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await res.json();
+      
+
+      if (res.ok && data.statusCode === 200) {
+        setProfileExists(true);
+        console.log("Profile exists");
+      } else if (data.statusCode === 404 && data.message === "Profile not found") {
+        
+        setProfileExists(false);
+        setShowCreateProfileModal(true);
+      } else {
+        setProfileExists(true);
+        console.log("Other response:", data);
+      }
+    } catch (error) {
+      console.error("Error checking profile:", error);
+      setProfileExists(true);
     }
   };
 
@@ -601,10 +645,14 @@ const Home = ({ user, onSectionChange }: HomeProps) => {
   // LOAD EVERYTHING
   // ----------------------------------------------------
   useEffect(() => {
-    // Hold suggestions API call for now; we will show the launch state instead.
-    fetchConnectionStatus();
-    fetchUnreadMessageCount();
-    setLoading(false);
+    const loadData = async () => {
+      await checkProfileExists();
+      await fetchConnectionStatus();
+      await fetchUnreadMessageCount();
+      setLoading(false);
+    };
+
+    loadData();
 
     const name = getNameFromToken();
     if (name) setDisplayName(name);
@@ -623,6 +671,11 @@ const Home = ({ user, onSectionChange }: HomeProps) => {
 
   const handleSkip = (profileId: number) => {
     setSkippedProfiles((prev) => [...prev, profileId]);
+  };
+
+  const handleCreateProfile = () => {
+    setShowCreateProfileModal(false);
+    navigate("/dashboard?section=basic-info");
   };
 
   const filteredProfiles = profiles.filter((profile) => {
@@ -912,6 +965,13 @@ const Home = ({ user, onSectionChange }: HomeProps) => {
         open={profileModalOpen}
         onOpenChange={setProfileModalOpen}
         profileId={selectedProfileId}
+      />
+
+      {/* Create Profile Modal (shown when profile doesn't exist) */}
+      <CreateProfileModal
+        open={showCreateProfileModal}
+        onOpenChange={setShowCreateProfileModal}
+        onCreate={handleCreateProfile}
       />
 
       {/* Subscription Modal */}

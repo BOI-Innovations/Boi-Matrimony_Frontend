@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Edit,
   MapPin,
@@ -29,7 +28,7 @@ const ProfileInfo = () => {
   const [uploading, setUploading] = useState(false);
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [isImageOpen, setIsImageOpen] = useState(false);
-  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [showCreateProfileModal, setShowCreateProfileModal] = useState(false);
   const navigate = useNavigate();
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -71,15 +70,42 @@ const ProfileInfo = () => {
           });
           await fetchProfileImage(token);
         } else {
-          // If profile not found, show create profile modal so user can create one
-          if (data?.statusCode === 404 && data?.message?.toLowerCase?.().includes("profile not found")) {
-            setCreateModalOpen(true);
-          } else {
-            console.error("Failed to fetch profile:", data.message);
-          }
+          // If profile not found or other error, show NA values
+          setUser({
+            firstName: "NA",
+            lastName: "NA",
+            username: "NA",
+            city: "NA",
+            state: "NA",
+            occupation: "NA",
+            highestEducation: "NA",
+            religion: "NA",
+            caste: "NA",
+            about: "NA",
+            heightIn: "NA",
+            dateOfBirth: "NA",
+            maritalStatus: "NA",
+            motherTongue: "NA",
+          });
         }
       } catch (err) {
         console.error("Error fetching profile:", err);
+        setUser({
+          firstName: "NA",
+          lastName: "NA",
+          username: "NA",
+          city: "NA",
+          state: "NA",
+          occupation: "NA",
+          highestEducation: "NA",
+          religion: "NA",
+          caste: "NA",
+          about: "NA",
+          heightIn: "NA",
+          dateOfBirth: "NA",
+          maritalStatus: "NA",
+          motherTongue: "NA",
+        });
       } finally {
         setLoading(false);
       }
@@ -138,10 +164,14 @@ const ProfileInfo = () => {
         const imgUrl = URL.createObjectURL(file);
         setProfileImage(imgUrl);
       } else {
-        toast({
-          description: data.message || "Failed to upload image",
-          variant: "destructive",
-        });
+        if (data.statusCode === 404 && data.message === "Profile not found") {
+          setShowCreateProfileModal(true);
+        } else {
+          toast({
+            description: data.message || "Failed to upload image",
+            variant: "destructive",
+          });
+        }
       }
     } catch (err) {
       console.error("Error uploading image:", err);
@@ -153,29 +183,11 @@ const ProfileInfo = () => {
 
   const handleButtonClick = () => fileInputRef.current?.click();
 
-  const handleCreateProfile = () => {
-    setCreateModalOpen(false);
-    navigate("/dashboard?section=basic-info");
-  };
-
   if (loading) {
     return (
       <div className="flex justify-center items-center h-[60vh]">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
-    );
-  }
-
-  if (!user) {
-    return (
-      <>
-        <div className="text-center text-muted-foreground py-10">Failed to load profile.</div>
-        <CreateProfileModal
-          open={createModalOpen}
-          onOpenChange={setCreateModalOpen}
-          onCreate={handleCreateProfile}
-        />
-      </>
     );
   }
 
@@ -218,12 +230,7 @@ const ProfileInfo = () => {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <Avatar className="w-full h-full">
-                    <AvatarFallback className="text-4xl bg-gradient-primary text-primary-foreground">
-                      {user.firstName?.[0]}
-                      {user.lastName?.[0]}
-                    </AvatarFallback>
-                  </Avatar>
+                  <div className="w-full h-full bg-gray-200 animate-pulse"></div>
                 )}
               </div>
 
@@ -343,7 +350,7 @@ const ProfileInfo = () => {
         <Card className="border-0 shadow-soft hover:shadow-medium transition-smooth">
           <CardContent className="pt-4 md:pt-6">
             <div className="text-center">
-              <p className="text-xl md:text-2xl font-bold text-primary">{new Date().getFullYear() - new Date(user.dateOfBirth).getFullYear()}</p>
+              <p className="text-xl md:text-2xl font-bold text-primary">{user.dateOfBirth !== "NA" ? new Date().getFullYear() - new Date(user.dateOfBirth).getFullYear() : "NA"}</p>
               <p className="text-xs md:text-sm text-muted-foreground">Age (आयु)</p>
             </div>
           </CardContent>
@@ -369,6 +376,16 @@ const ProfileInfo = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Create Profile Modal */}
+      <CreateProfileModal
+        open={showCreateProfileModal}
+        onOpenChange={setShowCreateProfileModal}
+        onCreate={() => {
+          setShowCreateProfileModal(false);
+          navigate("/dashboard?section=basic-info");
+        }}
+      />
     </div>
   );
 };

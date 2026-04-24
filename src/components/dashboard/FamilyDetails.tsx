@@ -12,6 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useNavigate } from "react-router-dom";
+import CreateProfileModal from "@/components/common/CreateProfileModal";
 
 interface FamilyDetailsData {
   id: number;
@@ -70,9 +72,12 @@ const FamilyDetails = () => {
   const [saving, setSaving] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [validationErrors, setValidationErrors] = useState<Set<string>>(new Set());
+  const [showCreateProfileModal, setShowCreateProfileModal] = useState(false);
 
   const [occupationCategories, setOccupationCategories] = useState<any[]>([]);
   const [loadingDropdown, setLoadingDropdown] = useState<string | null>(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchFamilyDetails = async () => {
@@ -270,6 +275,8 @@ const FamilyDetails = () => {
           title: "Updated Successfully",
           description: "Your family details have been saved.",
         });
+      } else if (data.statusCode === 404 && data.message === "Profile not found") {
+        setShowCreateProfileModal(true);
       } else {
         toast({
           title: "Update Failed",
@@ -630,6 +637,17 @@ const FamilyDetails = () => {
           </div>
         </CardContent>
       </Card>
+
+      {showCreateProfileModal && (
+        <CreateProfileModal
+          open={showCreateProfileModal}
+          onOpenChange={setShowCreateProfileModal}
+          onCreate={() => {
+            setShowCreateProfileModal(false);
+            navigate("/dashboard?section=basic-info");
+          }}
+        />
+      )}
     </div>
   );
 };

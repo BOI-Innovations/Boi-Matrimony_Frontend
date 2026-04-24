@@ -12,6 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import CreateProfileModal from "@/components/common/CreateProfileModal";
+import { useNavigate } from "react-router-dom";
 
 interface LocationDetailsData {
   city: string;
@@ -70,8 +72,10 @@ const LocationDetails = () => {
   const [countries, setCountries] = useState<any[]>([]);
   const [states, setStates] = useState<any[]>([]);
   const [loadingDropdown, setLoadingDropdown] = useState<string | null>(null);
+  const [showCreateProfileModal, setShowCreateProfileModal] = useState(false);
 
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  const navigate = useNavigate();
 
   // Fetch location details
   useEffect(() => {
@@ -102,10 +106,6 @@ const LocationDetails = () => {
           // Treat missing payload as "no data yet" — show empty form with N/A
           setLocationData({});
           setFormData({});
-          toast({
-            title: "No location data",
-            description: data.message || "No location details found. You can add them by clicking Edit.",
-          });
         }
       } catch (error) {
         console.error("Error fetching location details:", error);
@@ -395,13 +395,15 @@ const LocationDetails = () => {
 
       const data = await res.json();
 
-      if (res.ok && data.payload) {
+      if (data.statusCode === 200 && data.payload) {
         setLocationData(data.payload);
         setEditMode(false);
         toast({
           title: "Updated Successfully",
           description: "Your location details have been saved.",
         });
+      } else if (data.statusCode === 404 && data.message === "Profile not found") {
+        setShowCreateProfileModal(true);
       } else {
         toast({
           title: "Update Failed",
@@ -628,6 +630,17 @@ const LocationDetails = () => {
           </div>
         </CardContent>
       </Card>
+
+      {showCreateProfileModal && (
+        <CreateProfileModal
+          open={showCreateProfileModal}
+          onOpenChange={setShowCreateProfileModal}
+          onCreate={() => {
+            setShowCreateProfileModal(false);
+            navigate("/dashboard?section=basic-info");
+          }}
+        />
+      )}
     </div>
   );
 };
