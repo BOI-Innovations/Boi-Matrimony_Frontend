@@ -505,6 +505,10 @@ const PartnerPreference = () => {
     const errors = new Set<string>();
     REQUIRED_FIELDS.forEach((field) => {
       const value = formData[field];
+      // Skip haveChildren if maritalStatus is UNMARRIED
+      if (field === "haveChildren" && formData.maritalStatus === "UNMARRIED") {
+        return;
+      }
       if (
         value === undefined ||
         value === null ||
@@ -627,7 +631,8 @@ const PartnerPreference = () => {
     label: string,
     name: string,
     options: any[],
-    isMulti = false
+    isMulti = false,
+    disabled = false
   ) => (
     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 p-3 md:p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-smooth">
       <span className="font-medium text-muted-foreground text-sm">
@@ -687,8 +692,16 @@ const PartnerPreference = () => {
         ) : (
           <Select
             value={formData[name] || ""}
+            disabled={disabled}
             onValueChange={(v) => {
-              setFormData((prev: any) => ({ ...prev, [name]: v }));
+              setFormData((prev: any) => {
+                const newData = { ...prev, [name]: v };
+                // If marital status is set to UNMARRIED, set haveChildren to NO by default
+                if (name === "maritalStatus" && v === "UNMARRIED") {
+                  newData.haveChildren = "NO";
+                }
+                return newData;
+              });
               setValidationErrors((prev) => {
                 const newErrors = new Set(prev);
                 newErrors.delete(name);
@@ -1248,7 +1261,7 @@ const PartnerPreference = () => {
               {renderStaticSelectField("Physical Status (शारीरिक स्थिति)", "physicalStatus", physicalStatusOptions)}
               {renderMotherTongueField()}
               {renderStaticSelectField("Marital Status (वैवाहिक स्थिति)", "maritalStatus", maritalStatusOptions)}
-              {renderStaticSelectField("Have Children (बच्चे हैं)", "haveChildren", haveChildrenOptions)}
+              {renderStaticSelectField("Have Children (बच्चे हैं)", "haveChildren", haveChildrenOptions, false, formData.maritalStatus === "UNMARRIED")}
               {renderStaticSelectField("Manglik (मांगलिक)", "manglik", manglikOptions)}
             </div>
 
@@ -1327,7 +1340,7 @@ const PartnerPreference = () => {
                 {renderStaticSelectField("Physical Status (शारीरिक स्थिति)", "physicalStatus", physicalStatusOptions)}
                 {renderMotherTongueField()}
                 {renderStaticSelectField("Marital Status (वैवाहिक स्थिति)", "maritalStatus", maritalStatusOptions)}
-                {renderStaticSelectField("Have Children (बच्चे हैं)", "haveChildren", haveChildrenOptions)}
+                {renderStaticSelectField("Have Children (बच्चे हैं)", "haveChildren", haveChildrenOptions, false, formData.maritalStatus === "UNMARRIED")}
                 {renderStaticSelectField("Manglik (मांगलिक)", "manglik", manglikOptions)}
               </div>
             </CardContent>

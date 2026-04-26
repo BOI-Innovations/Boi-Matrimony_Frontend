@@ -115,7 +115,7 @@ const Step6PartnerPreferences = ({ data, onNext, onBack }: StepProps) => {
     maxHeight: data.maxHeight ?? "",
     gender: data.gender ?? "",
     maritalStatus: data.maritalStatus ?? "",
-    haveChildren: data.haveChildren ?? null,
+    haveChildren: data.maritalStatus === "UNMARRIED" ? "NO" : data.haveChildren ?? null,
     physicalStatus: data.physicalStatus ?? "",
     motherTongues: Array.isArray(data.motherTongues) ? data.motherTongues : [],
     // force religion to always be HINDU (backend value) regardless of incoming data
@@ -415,7 +415,7 @@ const Step6PartnerPreferences = ({ data, onNext, onBack }: StepProps) => {
         {/* Marital Status */}
         <div className="space-y-2">
           <Label>Marital Status (वैवाहिक स्थिति)</Label>
-          <Select value={formData.maritalStatus} onValueChange={(v) => setFormData({ ...formData, maritalStatus: v })}>
+          <Select value={formData.maritalStatus} onValueChange={(v) => setFormData({ ...formData, maritalStatus: v, haveChildren: v === "UNMARRIED" ? "NO" : formData.haveChildren })}>
             <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
             <SelectContent>
               {maritalStatusOptions.map(o => <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>)}
@@ -426,7 +426,7 @@ const Step6PartnerPreferences = ({ data, onNext, onBack }: StepProps) => {
         {/* Have Children */}
         <div className="space-y-2">
           <Label>Have Children (बच्चे हैं)</Label>
-          <Select value={formData.haveChildren} onValueChange={(v) => setFormData({ ...formData, haveChildren: v })}>
+          <Select value={formData.haveChildren} disabled={formData.maritalStatus === "UNMARRIED"} onValueChange={(v) => setFormData({ ...formData, haveChildren: v })}>
             <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
             <SelectContent>
               {haveChildrenOptions.map(o => <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>)}
