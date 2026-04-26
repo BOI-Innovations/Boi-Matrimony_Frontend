@@ -13,6 +13,7 @@ import Footer from "@/landing/components/Footer";
 import TeamSection from "@/landing/components/TeamSection";
 import DonationPopup from "./DonationPopup";
 import { useEffect, useState } from "react";
+import SEOContent from "@/landing/components/Seocontent ";
 
 
 const Index = () => {
@@ -28,6 +29,7 @@ const Index = () => {
       <Header />
       <main className="pt-16">
         <HeroSlider />
+        <SEOContent />
         <AboutSection />
         <HowItWorksSection />
         <SevaSection />
