@@ -118,15 +118,6 @@ const Step4Family = ({ data, onNext, onBack }: StepProps) => {
       { key: "familyValue", label: "Family Value" },
       { key: "familyType", label: "Family Type" },
       { key: "familyStatus", label: "Family Status" },
-      { key: "fatherOccupation", label: "Father's Occupation" },
-      { key: "motherOccupation", label: "Mother's Occupation" },
-      { key: "grandfatherOccupation", label: "Grandfather's Occupation" },
-      { key: "grandmotherOccupation", label: "Grandmother's Occupation" },
-      { key: "nativePlace", label: "Native Place" },
-      { key: "noOfBrothers", label: "Number of Brothers" },
-      { key: "brothersMarried", label: "Brothers Married" },
-      { key: "noOfSisters", label: "Number of Sisters" },
-      { key: "sistersMarried", label: "Sisters Married" },
     ];
 
     for (const field of requiredFields) {
@@ -179,7 +170,7 @@ const Step4Family = ({ data, onNext, onBack }: StepProps) => {
         body: JSON.stringify(payload),
       });
       const result = await response.json();
-      if (response.ok) {
+      if (result.statusCode === 201 || result.statusCode === 200) {
         toast({
           title: "Saved",
           description: result.message || "Family details saved.",
@@ -253,7 +244,7 @@ const Step4Family = ({ data, onNext, onBack }: StepProps) => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="fatherOccupation">Father's Occupation (पिता का व्यवसाय) *</Label>
+          <Label htmlFor="fatherOccupation">Father's Occupation (पिता का व्यवसाय)</Label>
           <Select
             value={formData.fatherOccupation}
             onValueChange={(v) => setFormData({ ...formData, fatherOccupation: v })}
@@ -288,7 +279,7 @@ const Step4Family = ({ data, onNext, onBack }: StepProps) => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="motherOccupation">Mother's Occupation (माता का व्यवसाय) *</Label>
+          <Label htmlFor="motherOccupation">Mother's Occupation (माता का व्यवसाय)</Label>
           <Select
             value={formData.motherOccupation}
             onValueChange={(v) => setFormData({ ...formData, motherOccupation: v })}
@@ -323,7 +314,7 @@ const Step4Family = ({ data, onNext, onBack }: StepProps) => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="grandfatherOccupation">Grandfather's Occupation (दादा का व्यवसाय) *</Label>
+          <Label htmlFor="grandfatherOccupation">Grandfather's Occupation (दादा का व्यवसाय)</Label>
           <Select
             value={formData.grandfatherOccupation}
             onValueChange={(v) => setFormData({ ...formData, grandfatherOccupation: v })}
@@ -358,7 +349,7 @@ const Step4Family = ({ data, onNext, onBack }: StepProps) => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="grandmotherOccupation">Grandmother's Occupation (दादी का व्यवसाय) *</Label>
+          <Label htmlFor="grandmotherOccupation">Grandmother's Occupation (दादी का व्यवसाय)</Label>
           <Select
             value={formData.grandmotherOccupation}
             onValueChange={(v) => setFormData({ ...formData, grandmotherOccupation: v })}
@@ -393,7 +384,7 @@ const Step4Family = ({ data, onNext, onBack }: StepProps) => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="nativePlace">Native Place (मूल स्थान) *</Label>
+          <Label htmlFor="nativePlace">Native Place (मूल स्थान)</Label>
           <Input
             id="nativePlace"
             placeholder="e.g., Pune, Maharashtra"
@@ -403,7 +394,7 @@ const Step4Family = ({ data, onNext, onBack }: StepProps) => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="noOfBrothers">Number of Brothers (भाइयों की संख्या) *</Label>
+          <Label htmlFor="noOfBrothers">Number of Brothers (भाइयों की संख्या)</Label>
           <Select
             value={formData.noOfBrothers?.toString() || ""}
             onValueChange={(v) => setFormData({ ...formData, noOfBrothers: v })}
@@ -422,7 +413,7 @@ const Step4Family = ({ data, onNext, onBack }: StepProps) => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="brothersMarried">Brothers Married (विवाहित भाई) *</Label>
+          <Label htmlFor="brothersMarried">Brothers Married (विवाहित भाई)</Label>
           <Select
             value={formData.brothersMarried?.toString() || ""}
             onValueChange={(v) => setFormData({ ...formData, brothersMarried: v })}
@@ -441,7 +432,7 @@ const Step4Family = ({ data, onNext, onBack }: StepProps) => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="noOfSisters">Number of Sisters (बहनों की संख्या) *</Label>
+          <Label htmlFor="noOfSisters">Number of Sisters (बहनों की संख्या)</Label>
           <Select
             value={formData.noOfSisters?.toString() || ""}
             onValueChange={(v) => setFormData({ ...formData, noOfSisters: v })}
@@ -460,7 +451,7 @@ const Step4Family = ({ data, onNext, onBack }: StepProps) => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="sistersMarried">Sisters Married (विवाहित बहनें) *</Label>
+          <Label htmlFor="sistersMarried">Sisters Married (विवाहित बहनें)</Label>
           <Select
             value={formData.sistersMarried?.toString() || ""}
             onValueChange={(v) => setFormData({ ...formData, sistersMarried: v })}

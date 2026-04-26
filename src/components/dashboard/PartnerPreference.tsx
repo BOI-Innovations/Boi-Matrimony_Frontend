@@ -33,22 +33,8 @@ import CreateProfileModal from "@/components/common/CreateProfileModal";
 const REQUIRED_FIELDS = [
   "minAge",
   "maxAge",
-  "minHeight",
-  "maxHeight",
   "gender",
-  "physicalStatus",
-  "motherTongues",
-  "maritalStatus",
-  "haveChildren",
-  "manglik",
-  "dietaryHabits",
-  "smokingHabits",
-  "drinkingHabits",
-  "educationType",
-  "educationLevels",
-  "employedIn",
-  "occupations",
-  "annualIncome",
+  "religion",
 ];
 
 const FIELD_LABELS: Record<string, string> = {
@@ -536,15 +522,19 @@ const PartnerPreference = () => {
     }
 
     setSaving(true);
-    // Ensure religion is always HINDU
-    formData.religion = "HINDU";
+    const payload = {
+      ...formData,
+      religion: "HINDU",
+      manglik: formData.manglik || null
+    };
+
     const response = await fetch(`${baseUrl}/api/profile-preference/save`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(formData),
+      body: JSON.stringify(payload),
     });
     
     const data = await response.json();
@@ -797,7 +787,11 @@ const PartnerPreference = () => {
         </div>
       ) : (
         <span className="font-semibold text-foreground text-sm sm:text-base break-all">
-          {Array.isArray(prefs[fieldName]) ? prefs[fieldName].join(", ") : (prefs[fieldName] || "N/A")}
+          {Array.isArray(prefs[fieldName])
+            ? prefs[fieldName].length > 0
+              ? prefs[fieldName].join(", ")
+              : "N/A"
+            : (prefs[fieldName] || "N/A")}
         </span>
       )}
     </div>
@@ -1015,7 +1009,7 @@ const PartnerPreference = () => {
       return (
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 p-3 md:p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-smooth">
           <span className="font-medium text-muted-foreground text-sm">
-            {label} <span className="text-red-500">*</span>
+            {label} {(REQUIRED_FIELDS.includes("minAge") || REQUIRED_FIELDS.includes("maxAge")) && <span className="text-red-500">*</span>}
           </span>
           {isEditing ? (
             <div className="flex gap-2 w-full sm:w-[60%]">
@@ -1078,7 +1072,7 @@ const PartnerPreference = () => {
       return (
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 p-3 md:p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-smooth">
           <span className="font-medium text-muted-foreground text-sm">
-            {label} <span className="text-red-500">*</span>
+            {label} {(REQUIRED_FIELDS.includes("minHeight") || REQUIRED_FIELDS.includes("maxHeight")) && <span className="text-red-500">*</span>}
           </span>
           {isEditing ? (
             <div className="flex gap-2 w-full sm:w-[60%]">
@@ -1177,7 +1171,7 @@ const PartnerPreference = () => {
   // Fixed religion (display)
   const renderFixedReligion = () => (
     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 p-3 md:p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-smooth">
-      <span className="font-medium text-muted-foreground text-sm">Religion (धर्म)</span>
+      <span className="font-medium text-muted-foreground text-sm">Religion (धर्म) {REQUIRED_FIELDS.includes("religion") && <span className="text-red-500">*</span>}</span>
       <span className="font-semibold text-foreground text-sm sm:text-base break-all">
         Hindu
       </span>

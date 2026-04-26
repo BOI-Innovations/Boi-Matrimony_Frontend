@@ -187,8 +187,8 @@ export const SubscriptionModal = ({ isOpen, onClose }: SubscriptionModalProps) =
       <div className="relative flex w-full max-w-md lg:max-w-4xl max-h-[90vh] flex-col overflow-hidden rounded-2xl shadow-2xl transition-all">
 
         {/* Close Button */}
-        <button 
-          onClick={onClose} 
+        <button
+          onClick={onClose}
           className="absolute top-2 right-2 z-50 p-2 rounded-full bg-black/30 hover:bg-black/50 transition-colors text-white touch-none"
         >
           <X className="w-6 h-6" />
@@ -226,7 +226,10 @@ export const SubscriptionModal = ({ isOpen, onClose }: SubscriptionModalProps) =
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute bottom-4 left-4 right-4 z-20">
-                    <span className="inline-block px-3 py-1 rounded-full bg-[#eead2b] text-[#181611] text-xs font-bold uppercase tracking-wider mb-2 shadow-sm">
+                    <span
+                      style={{ background: "var(--gradient-primary)" }}
+                      className="inline-block px-3 py-1 rounded-full text-white text-xs font-bold uppercase tracking-wider mb-2 shadow-sm"
+                    >
                       Best Value
                     </span>
                   </div>
@@ -235,8 +238,10 @@ export const SubscriptionModal = ({ isOpen, onClose }: SubscriptionModalProps) =
                 {/* Content */}
                 <div className="p-6 flex flex-col gap-6 lg:w-7/12">
                   <div className="text-center pb-4 border-b border-[#e6e2db] dark:border-[#3a332a]">
-                    <h1 className="text-lg font-bold text-center flex-1 truncate px-2 text-[#181611] dark:text-white">Community Support Membership</h1>
-                    <div className="flex items-baseline justify-center gap-1 text-[#eead2b]">
+                    <h1 className="text-xl font-bold text-center flex-1 truncate px-2 text-[#181611] dark:text-white">
+                      Community Support Membership
+                    </h1>
+                    <div className="flex items-baseline justify-center gap-1 text-[hsl(346_77%_50%)]">
                       <span className="text-4xl font-extrabold">
                         {planCurrency === "INR" ? "₹" : `${planCurrency} `}{planAmount}
                       </span>
@@ -247,7 +252,7 @@ export const SubscriptionModal = ({ isOpen, onClose }: SubscriptionModalProps) =
                   <div className="flex flex-col gap-4">
                     {/* Feature 1 */}
                     <div className="flex gap-3 items-start">
-                      <div className="flex-shrink-0 mt-0.5 text-[#eead2b]">
+                      <div className="flex-shrink-0 mt-0.5 text-[hsl(346_77%_50%)]">
                         <ShieldCheck className="w-5 h-5" />
                       </div>
                       <div className="flex flex-col">
@@ -257,7 +262,7 @@ export const SubscriptionModal = ({ isOpen, onClose }: SubscriptionModalProps) =
                     </div>
                     {/* Feature 2 */}
                     <div className="flex gap-3 items-start">
-                      <div className="flex-shrink-0 mt-0.5 text-[#eead2b]">
+                      <div className="flex-shrink-0 mt-0.5 text-[hsl(346_77%_50%)]">
                         <Landmark className="w-5 h-5" />
                       </div>
                       <div className="flex flex-col">
@@ -267,7 +272,7 @@ export const SubscriptionModal = ({ isOpen, onClose }: SubscriptionModalProps) =
                     </div>
                     {/* Feature 3 */}
                     <div className="flex gap-3 items-start">
-                      <div className="flex-shrink-0 mt-0.5 text-[#eead2b]">
+                      <div className="flex-shrink-0 mt-0.5 text-[hsl(346_77%_50%)]">
                         <Users className="w-5 h-5" />
                       </div>
                       <div className="flex flex-col">
@@ -277,7 +282,7 @@ export const SubscriptionModal = ({ isOpen, onClose }: SubscriptionModalProps) =
                     </div>
                     {/* Feature 4 */}
                     <div className="flex gap-3 items-start">
-                      <div className="flex-shrink-0 mt-0.5 text-[#eead2b]">
+                      <div className="flex-shrink-0 mt-0.5 text-[hsl(346_77%_50%)]">
                         <InfinityIcon className="w-5 h-5" />
                       </div>
                       <div className="flex flex-col">
@@ -291,10 +296,22 @@ export const SubscriptionModal = ({ isOpen, onClose }: SubscriptionModalProps) =
                     <button
                       disabled={!!loadingPlanId}
                       onClick={() => handlePayment("PLAN_BASIC_1M", "Community Support Membership", 2100)}
-                      className="w-full bg-[#eead2b] hover:bg-[#e0a025] active:scale-[0.98] transition-all duration-200 text-[#181611] font-bold text-lg h-14 rounded-xl shadow-lg shadow-[#eead2b]/20 flex items-center justify-center gap-2 group disabled:opacity-70 disabled:cursor-not-allowed"
+                      className="w-full active:scale-[0.98] transition-all duration-200 text-white font-bold text-lg h-12 rounded-xl flex items-center justify-center gap-2 group disabled:opacity-70 disabled:cursor-not-allowed"
+                      style={{ background: "var(--gradient-primary)" }}
+                      onMouseEnter={(e) => {
+                        if (!loadingPlanId) {
+                          e.currentTarget.style.background = "var(--gradient-primary-hover)";
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = "var(--gradient-primary)";
+                      }}
                     >
                       <span>{loadingPlanId ? "Processing..." : "Become a Member"}</span>
-                      {!loadingPlanId && <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />}
+
+                      {!loadingPlanId && (
+                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      )}
                     </button>
                     <p className="text-center text-[10px] text-[#897c61] dark:text-gray-500 mt-3">
                       Secure payment via UPI, Cards, or Netbanking

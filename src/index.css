@@ -42,6 +42,7 @@ All colors MUST be HSL.
     --radius: 0.75rem;
     
     --gradient-primary: linear-gradient(135deg, hsl(346 77% 50%) 0%, hsl(346 77% 40%) 100%);
+    --gradient-primary-hover: linear-gradient(135deg, hsl(346 77% 60%) 0%, hsl(346 77% 50%) 100%);
     --gradient-warm: linear-gradient(180deg, hsl(30 20% 98%) 0%, hsl(30 30% 96%) 100%);
     --gradient-gold: linear-gradient(135deg, hsl(40 95% 55%) 0%, hsl(35 90% 50%) 100%);
     

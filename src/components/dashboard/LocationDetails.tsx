@@ -41,12 +41,7 @@ const RESIDENCY_STATUS_OPTIONS: { label: string; value: string }[] = [
 
 const REQUIRED_FIELDS = [
   "country",
-  "state",
-  "city",
-  "postalCode",
-  "citizenship",
   "residencyStatus",
-  "livingSinceYear",
 ];
 
 const FIELD_LABELS: Record<string, string> = {
@@ -255,7 +250,7 @@ const LocationDetails = () => {
   // Validation helper for City
   const validateCity = (value: string): string | null => {
     if (!value || value.trim() === "") {
-      return "City is required.";
+      return null;
     }
     if (value.length < 2) {
       return "City must be at least 2 characters long.";
@@ -273,7 +268,7 @@ const LocationDetails = () => {
   // Validation helper for Postal Code
   const validatePostalCode = (value: string): string | null => {
     if (!value || value.trim() === "") {
-      return "Postal Code is required.";
+      return null;
     }
     if (value.length < 3) {
       return "Postal Code must be at least 3 characters long.";
@@ -291,7 +286,7 @@ const LocationDetails = () => {
   // Validation helper for Living Since Year
   const validateLivingSinceYear = (value: string | number): string | null => {
     if (value === undefined || value === null || value === "") {
-      return "Living Since Year is required.";
+      return null;
     }
     const year = Number(value);
     if (isNaN(year)) {
@@ -317,17 +312,17 @@ const LocationDetails = () => {
   };
 
   const validateForm = () => {
-    const errors = new Set<string>();
-    REQUIRED_FIELDS.forEach((field) => {
-      if (field === "state" && states.length === 0) return;
-      const value = formData[field as keyof LocationDetailsData];
-      if (value === undefined || value === null || value === "") {
-        errors.add(field);
-      }
-    });
-    setValidationErrors(errors);
-    return errors;
-  };
+  const errors = new Set<string>();
+  REQUIRED_FIELDS.forEach((field) => {
+    if (field === "state" && states.length === 0) return;
+    const value = formData[field as keyof LocationDetailsData];
+    if (value === undefined || value === null || value === "") {
+      errors.add(field);
+    }
+  });
+  setValidationErrors(errors);
+  return errors;
+};
 
   // Save data
   const handleSave = async () => {

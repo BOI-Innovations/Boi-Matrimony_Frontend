@@ -148,7 +148,7 @@ const Step3Education = ({ data, onNext, onBack }: StepProps) => {
   // Validation helper for College/Institution and Organization Name
   const validateNameField = (value: string, fieldName: string): string | null => {
     if (!value || value.trim() === "") {
-      return `${fieldName} is required.`;
+      return null;
     }
     if (value.length < 3) {
       return `${fieldName} must be at least 3 characters long.`;
@@ -207,16 +207,7 @@ const Step3Education = ({ data, onNext, onBack }: StepProps) => {
 
     // Validation
     const requiredFields = [
-      { key: "highestEducation", label: "Highest Education" },
-      { key: "additionalDegree", label: "Additional Degree" },
-      { key: "collegeInstitution", label: "College / Institution" },
       { key: "employedIn", label: "Employed In" },
-      { key: "occupation", label: "Occupation" },
-      { key: "organizationName", label: "Organization Name" },
-      { key: "annualIncome", label: "Annual Income" },
-      { key: "incomeCurrency", label: "Income Currency" },
-      { key: "workCountry", label: "Work Country" },
-      { key: "workCity", label: "Work City" },
     ];
 
     for (const field of requiredFields) {
@@ -228,15 +219,6 @@ const Step3Education = ({ data, onNext, onBack }: StepProps) => {
         });
         return;
       }
-    }
-
-    if (selectedCountry?.states && selectedCountry.states.length > 0 && !formData.workState) {
-      toast({
-        title: "Validation Error",
-        description: "Work State is required.",
-        variant: "destructive",
-      });
-      return;
     }
 
     setSaving(true);
@@ -262,13 +244,13 @@ const Step3Education = ({ data, onNext, onBack }: StepProps) => {
         body: JSON.stringify(formData),
       });
       const result = await response.json();
-      if (response.ok) {
+      if (response.ok || result.statusCode === 201 || result.statusCode === 200 || result.statusCode === "OK") {
         toast({
           title: "Saved",
           description: "Education & occupation details saved.",
           variant: "default",
         });
-        onNext(formData);
+        onNext(result.payload || formData);
       } else {
         toast({
           title: "Error saving details",
@@ -298,7 +280,7 @@ const Step3Education = ({ data, onNext, onBack }: StepProps) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Highest Education */}
           <div className="space-y-2">
-            <Label htmlFor="highestEducation">Highest Education (उच्चतम शिक्षा) *</Label>
+            <Label htmlFor="highestEducation">Highest Education (उच्चतम शिक्षा)</Label>
             <Select
               value={formData.highestEducation}
               onValueChange={(value) => setFormData({ ...formData, highestEducation: value })}
@@ -335,7 +317,7 @@ const Step3Education = ({ data, onNext, onBack }: StepProps) => {
 
           {/* Additional Degree */}
           <div className="space-y-2">
-            <Label htmlFor="additionalDegree">Additional Degree (अतिरिक्त डिग्री) *</Label>
+            <Label htmlFor="additionalDegree">Additional Degree (अतिरिक्त डिग्री)</Label>
             <Select
               value={formData.additionalDegree}
               onValueChange={(value) => setFormData({ ...formData, additionalDegree: value })}
@@ -368,7 +350,6 @@ const Step3Education = ({ data, onNext, onBack }: StepProps) => {
           <div className="space-y-2">
             <Label htmlFor="collegeInstitution">
               College / Institution (कॉलेज / संस्थान) 
-              <span className="text-red-500 ml-1">*</span>
             </Label>
             <Input
               id="collegeInstitution"
@@ -389,7 +370,9 @@ const Step3Education = ({ data, onNext, onBack }: StepProps) => {
 
           {/* Education in Detail */}
           <div className="space-y-2 md:col-span-2">
-            <Label htmlFor="educationInDetail">Education in Detail (शिक्षा विवरण)</Label>
+            <Label htmlFor="educationInDetail">
+              Education in Detail (शिक्षा विवरण) 
+            </Label>
             <Textarea
               id="educationInDetail"
               rows={3}
@@ -430,7 +413,7 @@ const Step3Education = ({ data, onNext, onBack }: StepProps) => {
 
           {/* Occupation */}
           <div className="space-y-2">
-            <Label htmlFor="occupation">Occupation (व्यवसाय) *</Label>
+            <Label htmlFor="occupation">Occupation (व्यवसाय)</Label>
             <Select
               value={formData.occupation}
               onValueChange={(value) => setFormData({ ...formData, occupation: value })}
@@ -463,7 +446,6 @@ const Step3Education = ({ data, onNext, onBack }: StepProps) => {
           <div className="space-y-2">
             <Label htmlFor="organizationName">
               Organization Name (संस्था का नाम) 
-              <span className="text-red-500 ml-1">*</span>
             </Label>
             <Input
               id="organizationName"
@@ -484,7 +466,7 @@ const Step3Education = ({ data, onNext, onBack }: StepProps) => {
 
           {/* Annual Income */}
           <div className="space-y-2">
-            <Label htmlFor="annualIncome">Annual Income (वार्षिक आय) *</Label>
+            <Label htmlFor="annualIncome">Annual Income (वार्षिक आय)</Label>
             <Select
               value={formData.annualIncome}
               onValueChange={(value) => setFormData({ ...formData, annualIncome: value })}
@@ -508,7 +490,7 @@ const Step3Education = ({ data, onNext, onBack }: StepProps) => {
 
           {/* Currency */}
           <div className="space-y-2">
-            <Label htmlFor="incomeCurrency">Currency (मुद्रा) *</Label>
+            <Label htmlFor="incomeCurrency">Currency (मुद्रा)</Label>
             <Select
               value={formData.incomeCurrency}
               onValueChange={(value) => setFormData({ ...formData, incomeCurrency: value })}
@@ -532,7 +514,7 @@ const Step3Education = ({ data, onNext, onBack }: StepProps) => {
 
           {/* Work Country */}
           <div className="space-y-2">
-            <Label htmlFor="workCountry">Work Country (कार्य देश) *</Label>
+            <Label htmlFor="workCountry">Work Country (कार्य देश)</Label>
             <Select
               value={formData.workCountry}
               onValueChange={handleCountryChange}
@@ -557,7 +539,7 @@ const Step3Education = ({ data, onNext, onBack }: StepProps) => {
           {/* Work State (only if available) */}
           {selectedCountry?.states && selectedCountry.states.length > 0 && (
             <div className="space-y-2">
-              <Label htmlFor="workState">Work State (कार्य राज्य) *</Label>
+              <Label htmlFor="workState">Work State (कार्य राज्य)</Label>
               <Select
                 value={formData.workState}
                 onValueChange={handleStateChange}
@@ -578,7 +560,7 @@ const Step3Education = ({ data, onNext, onBack }: StepProps) => {
 
           {/* Work City - dropdown if districts exist, else text input */}
           <div className="space-y-2">
-            <Label htmlFor="workCity">Work City (कार्य शहर) <span className="text-red-500 ml-1">*</span></Label>
+            <Label htmlFor="workCity">Work City (कार्य शहर)</Label>
             {selectedState?.districts && selectedState.districts.length > 0 ? (
               <Select
                 value={formData.workCity}
@@ -616,7 +598,9 @@ const Step3Education = ({ data, onNext, onBack }: StepProps) => {
 
           {/* Occupation in Detail */}
           <div className="space-y-2 md:col-span-2">
-            <Label htmlFor="occupationInDetail">Occupation in Detail (व्यवसाय विवरण)</Label>
+            <Label htmlFor="occupationInDetail">
+              Occupation in Detail (व्यवसाय विवरण) 
+            </Label>
             <Textarea
               id="occupationInDetail"
               rows={3}

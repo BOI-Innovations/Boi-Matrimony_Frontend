@@ -265,6 +265,25 @@ const Step6PartnerPreferences = ({ data, onNext, onBack }: StepProps) => {
       return;
     }
 
+    // Validate mandatory fields
+    const requiredFields = [
+      { key: "minAge", label: "Minimum Age" },
+      { key: "maxAge", label: "Maximum Age" },
+      { key: "gender", label: "Gender" },
+    ];
+
+    for (const field of requiredFields) {
+      if (!formData[field.key as keyof typeof formData]) {
+        setSaving(false);
+        toast({
+          title: "Validation Error",
+          description: `${field.label} is required.`,
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
     const payload = {
       minAge: formData.minAge !== "" ? Number(formData.minAge) : null,
       maxAge: formData.maxAge !== "" ? Number(formData.maxAge) : null,
@@ -313,7 +332,7 @@ const Step6PartnerPreferences = ({ data, onNext, onBack }: StepProps) => {
         body: JSON.stringify(payload),
       });
       const result = await res.json();
-      if (res.ok) {
+      if (result.statusCode === 201 || result.statusCode === 200) {
         toast({
           title: "Saved",
           description: result.message || "Preference saved successfully.",
@@ -343,7 +362,7 @@ const Step6PartnerPreferences = ({ data, onNext, onBack }: StepProps) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Age */}
         <div className="space-y-2">
-          <Label>Minimum Age (न्यूनतम आयु)</Label>
+          <Label>Minimum Age (न्यूनतम आयु) *</Label>
           <Select value={formData.minAge?.toString() ?? ""} onValueChange={(v) => setFormData({ ...formData, minAge: v })}>
             <SelectTrigger><SelectValue placeholder="Select min age" /></SelectTrigger>
             <SelectContent>
@@ -354,7 +373,7 @@ const Step6PartnerPreferences = ({ data, onNext, onBack }: StepProps) => {
           </Select>
         </div>
         <div className="space-y-2">
-          <Label>Maximum Age (अधिकतम आयु)</Label>
+          <Label>Maximum Age (अधिकतम आयु) *</Label>
           <Select value={formData.maxAge?.toString() ?? ""} onValueChange={(v) => setFormData({ ...formData, maxAge: v })}>
             <SelectTrigger><SelectValue placeholder="Select max age" /></SelectTrigger>
             <SelectContent>
@@ -403,7 +422,7 @@ const Step6PartnerPreferences = ({ data, onNext, onBack }: StepProps) => {
 
         {/* Gender */}
         <div className="space-y-2">
-          <Label>Gender (लिंग)</Label>
+          <Label>Gender (लिंग) *</Label>
           <Select value={formData.gender} onValueChange={(v) => setFormData({ ...formData, gender: v })}>
             <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
             <SelectContent>
@@ -464,7 +483,7 @@ const Step6PartnerPreferences = ({ data, onNext, onBack }: StepProps) => {
           </Select>
         </div>
         <div className="space-y-2">
-          <Label>Religion (धर्म)</Label>
+          <Label>Religion (धर्म) *</Label>
           {/* non-editable display; visible text "Hindu" while backend receives "HINDU" */}
           <Input value="Hindu" disabled />
           {/* keep form state consistent (already set above). no select provided. */}

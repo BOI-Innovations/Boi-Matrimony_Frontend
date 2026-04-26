@@ -22,24 +22,16 @@ const REQUIRED_FIELDS = [
   "gender",
   "profileCreatedFor",
   "dateOfBirth",
-  "timeOfBirth",
-  "placeOfBirth",
   "religion",
   "caste",
   "subCaste",
   "maritalStatus",
-  "heightIn",
-  "weight",
   "physicalStatus",
-  "motherTongue",
   "gothra",
-  "manglik",
   "dietaryHabits",
   "drinkingHabits",
   "smokingHabits",
   "hasDisease",
-  "about",
-  "languagesKnown",
 ];
 
 const FIELD_LABELS: Record<string, string> = {
@@ -363,7 +355,7 @@ const BasicInformation = () => {
   // Validation helper for Place of Birth
   const validatePlaceOfBirth = (value: string): string | null => {
     if (!value || value.trim() === "") {
-      return "Place of Birth is required.";
+      return null; 
     }
     if (value.length < 3) {
       return "Place of Birth must be at least 3 characters long.";
@@ -424,37 +416,6 @@ const BasicInformation = () => {
   };
 
   const handleSave = async () => {
-    // Validate specific fields with custom error messages
-    const firstNameError = validateNameField(formData.firstName, "First Name");
-    if (firstNameError) {
-      toast({
-        title: "Validation Error",
-        description: firstNameError,
-        variant: "destructive",
-      });
-      return;
-    }
-
-    const lastNameError = validateNameField(formData.lastName, "Last Name");
-    if (lastNameError) {
-      toast({
-        title: "Validation Error",
-        description: lastNameError,
-        variant: "destructive",
-      });
-      return;
-    }
-
-    const placeOfBirthError = validatePlaceOfBirth(formData.placeOfBirth);
-    if (placeOfBirthError) {
-      toast({
-        title: "Validation Error",
-        description: placeOfBirthError,
-        variant: "destructive",
-      });
-      return;
-    }
-
     // Ensure religion is always set to "HINDU"
     const formDataWithReligion = {
       ...formData,
@@ -466,6 +427,13 @@ const BasicInformation = () => {
     if (errors.size > 0) {
       const firstErrorField = Array.from(errors)[0];
       const label = FIELD_LABELS[firstErrorField] || firstErrorField;
+      
+      // Scroll to the first error field
+      const errorElement = document.querySelector(`[data-field="${firstErrorField}"]`);
+      if (errorElement) {
+        errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      
       toast({
         title: "Validation Error",
         description: `${label} is required.`,
@@ -490,6 +458,7 @@ const BasicInformation = () => {
     // ✅ ensure correct key name and handle array format
     const updatedData = {
       ...formDataWithReligion,
+      manglik: formDataWithReligion.manglik || null,
       profileCreatedFor: formDataWithReligion.profileCreatedFor || user.profileCreatedFor,
       languagesKnown:
         typeof formDataWithReligion.languagesKnown === "string"
@@ -616,7 +585,7 @@ const BasicInformation = () => {
       if (item.field === "religion") return null;
       
       return (
-        <div key={index} className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 p-3 md:p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-smooth">
+        <div key={index} className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 p-3 md:p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-smooth" data-field={item.field}>
           <span className="font-medium text-muted-foreground text-sm">
             {item.label}
             {(REQUIRED_FIELDS.includes(item.field) || (item.field === "diseaseDetails" && formData.hasDisease)) && (
@@ -630,7 +599,13 @@ const BasicInformation = () => {
                   value={formData.profileCreatedFor ?? ""}
                   onValueChange={(v) => {
                     handleChange("profileCreatedFor", v);
-                    if (v) validationErrors.delete("profileCreatedFor");
+                    if (v) {
+                      setValidationErrors(prev => {
+                        const newErrors = new Set(prev);
+                        newErrors.delete("profileCreatedFor");
+                        return newErrors;
+                      });
+                    }
                   }}
                   onOpenChange={(open) => {
                     if (open && createdForOptions.length === 0) {
@@ -663,7 +638,13 @@ const BasicInformation = () => {
                   value={formData.caste ?? ""}
                   onValueChange={(v) => {
                     handleChange("caste", v);
-                    if (v) validationErrors.delete("caste");
+                    if (v) {
+                      setValidationErrors(prev => {
+                        const newErrors = new Set(prev);
+                        newErrors.delete("caste");
+                        return newErrors;
+                      });
+                    }
                   }}
                   onOpenChange={(open) => {
                     if (open && casteOptions.length === 0) {
@@ -696,7 +677,13 @@ const BasicInformation = () => {
                   value={formData.subCaste ?? ""}
                   onValueChange={(v) => {
                     handleChange("subCaste", v);
-                    if (v) validationErrors.delete("subCaste");
+                    if (v) {
+                      setValidationErrors(prev => {
+                        const newErrors = new Set(prev);
+                        newErrors.delete("subCaste");
+                        return newErrors;
+                      });
+                    }
                   }}
                   onOpenChange={(open) => {
                     if (open && subCasteOptions.length === 0) {
@@ -729,7 +716,13 @@ const BasicInformation = () => {
                   value={formData.heightIn ?? ""}
                   onValueChange={(v) => {
                     handleChange("heightIn", v);
-                    if (v) validationErrors.delete("heightIn");
+                    if (v) {
+                      setValidationErrors(prev => {
+                        const newErrors = new Set(prev);
+                        newErrors.delete("heightIn");
+                        return newErrors;
+                      });
+                    }
                   }}
                   onOpenChange={(open) => {
                     if (open && heightOptions.length === 0) {
@@ -762,7 +755,13 @@ const BasicInformation = () => {
                   value={formData.weight ?? ""}
                   onValueChange={(v) => {
                     handleChange("weight", v);
-                    if (v) validationErrors.delete("weight");
+                    if (v) {
+                      setValidationErrors(prev => {
+                        const newErrors = new Set(prev);
+                        newErrors.delete("weight");
+                        return newErrors;
+                      });
+                    }
                   }}
                   onOpenChange={(open) => {
                     if (open && weightOptions.length === 0) {
@@ -795,7 +794,13 @@ const BasicInformation = () => {
                   value={formData.motherTongue ?? ""}
                   onValueChange={(v) => {
                     handleChange("motherTongue", v);
-                    if (v) validationErrors.delete("motherTongue");
+                    if (v) {
+                      setValidationErrors(prev => {
+                        const newErrors = new Set(prev);
+                        newErrors.delete("motherTongue");
+                        return newErrors;
+                      });
+                    }
                   }}
                   onOpenChange={(open) => {
                     if (open && motherTongueOptions.length === 0) {
@@ -883,7 +888,13 @@ const BasicInformation = () => {
                   value={formData.gothra ?? ""}
                   onValueChange={(v) => {
                     handleChange("gothra", v);
-                    if (v) validationErrors.delete("gothra");
+                    if (v) {
+                      setValidationErrors(prev => {
+                        const newErrors = new Set(prev);
+                        newErrors.delete("gothra");
+                        return newErrors;
+                      });
+                    }
                   }}
                   onOpenChange={(open) => {
                     if (open && gothraOptions.length === 0) {
@@ -976,7 +987,13 @@ const BasicInformation = () => {
                   value={formData.gender ?? ""}
                   onValueChange={(v) => {
                     handleChange("gender", v);
-                    if (v) validationErrors.delete("gender");
+                    if (v) {
+                      setValidationErrors(prev => {
+                        const newErrors = new Set(prev);
+                        newErrors.delete("gender");
+                        return newErrors;
+                      });
+                    }
                   }}
                 >
                   <SelectTrigger className={validationErrors.has("gender") ? "border-red-500 border-2" : ""}>
@@ -998,7 +1015,13 @@ const BasicInformation = () => {
                   value={formData.manglik ?? ""}
                   onValueChange={(v) => {
                     handleChange("manglik", v);
-                    if (v) validationErrors.delete("manglik");
+                    if (v) {
+                      setValidationErrors(prev => {
+                        const newErrors = new Set(prev);
+                        newErrors.delete("manglik");
+                        return newErrors;
+                      });
+                    }
                   }}
                 >
                   <SelectTrigger className={validationErrors.has("manglik") ? "border-red-500 border-2" : ""}>
@@ -1020,7 +1043,13 @@ const BasicInformation = () => {
                   value={formData.dietaryHabits ?? ""}
                   onValueChange={(v) => {
                     handleChange("dietaryHabits", v);
-                    if (v) validationErrors.delete("dietaryHabits");
+                    if (v) {
+                      setValidationErrors(prev => {
+                        const newErrors = new Set(prev);
+                        newErrors.delete("dietaryHabits");
+                        return newErrors;
+                      });
+                    }
                   }}
                 >
                   <SelectTrigger className={validationErrors.has("dietaryHabits") ? "border-red-500 border-2" : ""}>
@@ -1042,7 +1071,13 @@ const BasicInformation = () => {
                   value={formData.drinkingHabits ?? ""}
                   onValueChange={(v) => {
                     handleChange("drinkingHabits", v);
-                    if (v) validationErrors.delete("drinkingHabits");
+                    if (v) {
+                      setValidationErrors(prev => {
+                        const newErrors = new Set(prev);
+                        newErrors.delete("drinkingHabits");
+                        return newErrors;
+                      });
+                    }
                   }}
                 >
                   <SelectTrigger className={validationErrors.has("drinkingHabits") ? "border-red-500 border-2" : ""}>
@@ -1064,7 +1099,13 @@ const BasicInformation = () => {
                   value={formData.smokingHabits ?? ""}
                   onValueChange={(v) => {
                     handleChange("smokingHabits", v);
-                    if (v) validationErrors.delete("smokingHabits");
+                    if (v) {
+                      setValidationErrors(prev => {
+                        const newErrors = new Set(prev);
+                        newErrors.delete("smokingHabits");
+                        return newErrors;
+                      });
+                    }
                   }}
                 >
                   <SelectTrigger className={validationErrors.has("smokingHabits") ? "border-red-500 border-2" : ""}>
@@ -1086,7 +1127,13 @@ const BasicInformation = () => {
                   value={formData.maritalStatus ?? ""}
                   onValueChange={(v) => {
                     handleChange("maritalStatus", v);
-                    if (v) validationErrors.delete("maritalStatus");
+                    if (v) {
+                      setValidationErrors(prev => {
+                        const newErrors = new Set(prev);
+                        newErrors.delete("maritalStatus");
+                        return newErrors;
+                      });
+                    }
                   }}
                 >
                   <SelectTrigger className={validationErrors.has("maritalStatus") ? "border-red-500 border-2" : ""}>
@@ -1108,7 +1155,13 @@ const BasicInformation = () => {
                   value={formData.physicalStatus ?? ""}
                   onValueChange={(v) => {
                     handleChange("physicalStatus", v);
-                    if (v) validationErrors.delete("physicalStatus");
+                    if (v) {
+                      setValidationErrors(prev => {
+                        const newErrors = new Set(prev);
+                        newErrors.delete("physicalStatus");
+                        return newErrors;
+                      });
+                    }
                   }}
                 >
                   <SelectTrigger className={validationErrors.has("physicalStatus") ? "border-red-500 border-2" : ""}>
@@ -1130,7 +1183,13 @@ const BasicInformation = () => {
                   value={formData.hasDisease === undefined || formData.hasDisease === null ? "" : String(formData.hasDisease)}
                   onValueChange={(v) => {
                     handleChange("hasDisease", v === "true");
-                    if (v) validationErrors.delete("hasDisease");
+                    if (v) {
+                      setValidationErrors(prev => {
+                        const newErrors = new Set(prev);
+                        newErrors.delete("hasDisease");
+                        return newErrors;
+                      });
+                    }
                   }}
                 >
                   <SelectTrigger className={validationErrors.has("hasDisease") ? "border-red-500 border-2" : ""}>
@@ -1157,7 +1216,13 @@ const BasicInformation = () => {
                 }
                 onChange={(e) => {
                   handleChange(item.field, e.target.value);
-                  if (e.target.value) validationErrors.delete(item.field);
+                  if (e.target.value.trim()) {
+                    setValidationErrors(prev => {
+                      const newErrors = new Set(prev);
+                      newErrors.delete(item.field);
+                      return newErrors;
+                    });
+                  }
                 }}
                 className={cn(
                   "w-full sm:w-[60%]",
@@ -1336,13 +1401,19 @@ const BasicInformation = () => {
         </CardHeader>
         <CardContent className="p-4 md:p-6">
           <div className="mt-6 pt-6 border-t">
-            <h3 className="font-semibold mb-3 text-lg">About Me (मेरे बारे में) <span className="text-red-500">*</span></h3>
+            <h3 className="font-semibold mb-3 text-lg">About Me (मेरे बारे में)</h3>
             {editMode ? (
               <textarea
                 value={formData.about || ""}
                 onChange={(e) => {
                   handleChange("about", e.target.value);
-                  if (e.target.value) validationErrors.delete("about");
+                  if (e.target.value.trim()) {
+                    setValidationErrors(prev => {
+                      const newErrors = new Set(prev);
+                      newErrors.delete("about");
+                      return newErrors;
+                    });
+                  }
                 }}
                 className={`w-full border rounded-md p-3 min-h-[100px] ${validationErrors.has("about") ? "border-red-500 border-2" : ""}`}
               />
@@ -1355,7 +1426,7 @@ const BasicInformation = () => {
 
           {/* Declaration block */}
           <div className="mt-6 pt-6 border-t">
-            <h3 className="font-semibold mb-3 text-lg">Declaration Text (घोषणा पाठ)</h3>
+            <h3 className="font-semibold mb-3 text-lg">Declaration Text (घोषणा पाठ) <span className="text-red-500">*</span></h3>
 
             <div className="text-muted-foreground leading-relaxed">
               <p className="text-muted-foreground leading-relaxed">{DECLARATION_TEXT}</p>

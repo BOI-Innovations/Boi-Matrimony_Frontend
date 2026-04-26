@@ -22,6 +22,17 @@ const maritalStatusMap: { [key: string]: string } = {
   DOESNT_MATTER: "Doesn't Matter",
 };
 
+const religionMap: { [key: string]: string } = {
+  HINDU: "Hindu",
+  MUSLIM: "Muslim",
+  CHRISTIAN: "Christian",
+  SIKH: "Sikh",
+  BUDDHIST: "Buddhist",
+  JAIN: "Jain",
+  OTHER: "Other",
+  PREFER_NOT_TO_SAY: "Prefer not to say",
+};
+
 const ProfileInfo = () => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -32,6 +43,13 @@ const ProfileInfo = () => {
   const navigate = useNavigate();
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  // Helper function to format value or show fallback
+  const formatValue = (value: any, fallback: string = "Not specified") => {
+    return value && value !== "NA" && value !== null && value !== undefined 
+      ? value 
+      : fallback;
+  };
 
   // Fetch profile and profile image
   useEffect(() => {
@@ -200,8 +218,8 @@ const ProfileInfo = () => {
             <CardTitle className="text-2xl md:text-3xl">Profile Info</CardTitle>
             <Button
               className="bg-gradient-primary w-auto"
-              onClick={handleButtonClick} // open profile image file picker
-              disabled={uploading} // avoid interaction during upload
+              onClick={handleButtonClick}
+              disabled={uploading}
             >
               <Edit className="w-4 h-4 mr-2" /> Edit Profile
             </Button>
@@ -273,10 +291,10 @@ const ProfileInfo = () => {
             <div className="flex-1 space-y-6">
               <div>
                 <h2 className="text-3xl font-bold">
-                  {user.firstName} {user.lastName}
+                  {formatValue(user.firstName)} {formatValue(user.lastName)}
                 </h2>
                 <p className="text-lg text-muted-foreground">
-                  Profile ID: {user.username}
+                  User ID: {formatValue(user.username)}
                 </p>
               </div>
 
@@ -288,7 +306,9 @@ const ProfileInfo = () => {
                   <div>
                     <p className="text-sm text-muted-foreground">Location (स्थान)</p>
                     <p className="font-medium">
-                      {user.city}, {user.state}
+                      {user.city && user.city !== "NA" && user.state && user.state !== "NA" 
+                        ? `${user.city}, ${user.state}`
+                        : formatValue(user.city || user.state, "Not specified")}
                     </p>
                   </div>
                 </div>
@@ -299,7 +319,7 @@ const ProfileInfo = () => {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Occupation (व्यवसाय)</p>
-                    <p className="font-medium">{user.occupation}</p>
+                    <p className="font-medium">{formatValue(user.occupation)}</p>
                   </div>
                 </div>
 
@@ -309,7 +329,7 @@ const ProfileInfo = () => {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Education (शिक्षा)</p>
-                    <p className="font-medium">{user.highestEducation}</p>
+                    <p className="font-medium">{formatValue(user.highestEducation)}</p>
                   </div>
                 </div>
 
@@ -320,13 +340,13 @@ const ProfileInfo = () => {
                   <div>
                     <p className="text-sm text-muted-foreground">Religion (धर्म)</p>
                     <p className="font-medium">
-                      {user.religion}, {user.caste}
+                      {religionMap[user.religion] || formatValue(user.religion)}, {formatValue(user.caste)}
                     </p>
                   </div>
                 </div>
               </div>
 
-              {user.about && (
+              {user.about && user.about !== "NA" && user.about !== "" && (
                 <div className="pt-4 border-t">
                   <h3 className="font-semibold mb-2">About Me (मेरे बारे में)</h3>
                   <p className="text-muted-foreground">{user.about}</p>
@@ -339,18 +359,24 @@ const ProfileInfo = () => {
       {/* Quick Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
         <Card className="border-0 shadow-soft hover:shadow-medium transition-smooth">
-          <CardContent className="pt-4 md:pt-6">
-            <div className="text-center">
-              <p className="text-xl md:text-2xl font-bold text-primary">{user.heightIn}</p>
-              <p className="text-xs md:text-sm text-muted-foreground">Height (कद)</p>
-            </div>
-          </CardContent>
-        </Card>
+    <CardContent className="pt-4 md:pt-6">
+      <div className="text-center">
+        <p className="text-xl md:text-2xl font-bold text-primary truncate px-2" title={formatValue(user.heightIn)}>
+          {formatValue(user.heightIn)}
+        </p>
+        <p className="text-xs md:text-sm text-muted-foreground">Height (कद)</p>
+      </div>
+    </CardContent>
+  </Card>
 
         <Card className="border-0 shadow-soft hover:shadow-medium transition-smooth">
           <CardContent className="pt-4 md:pt-6">
             <div className="text-center">
-              <p className="text-xl md:text-2xl font-bold text-primary">{user.dateOfBirth !== "NA" ? new Date().getFullYear() - new Date(user.dateOfBirth).getFullYear() : "NA"}</p>
+              <p className="text-xl md:text-2xl font-bold text-primary">
+                {user.dateOfBirth && user.dateOfBirth !== "NA" 
+                  ? new Date().getFullYear() - new Date(user.dateOfBirth).getFullYear() 
+                  : "Not specified"}
+              </p>
               <p className="text-xs md:text-sm text-muted-foreground">Age (आयु)</p>
             </div>
           </CardContent>
@@ -360,7 +386,7 @@ const ProfileInfo = () => {
           <CardContent className="pt-4 md:pt-6">
             <div className="text-center">
               <p className="text-lg md:text-xl font-bold text-primary truncate px-2">
-                {maritalStatusMap[user.maritalStatus] || user.maritalStatus}
+                {maritalStatusMap[user.maritalStatus] || formatValue(user.maritalStatus)}
               </p>
               <p className="text-xs md:text-sm text-muted-foreground">Status (स्थिति)</p>
             </div>
@@ -370,7 +396,7 @@ const ProfileInfo = () => {
         <Card className="border-0 shadow-soft hover:shadow-medium transition-smooth">
           <CardContent className="pt-4 md:pt-6">
             <div className="text-center">
-              <p className="text-lg md:text-xl font-bold text-primary truncate px-2">{user.motherTongue}</p>
+              <p className="text-lg md:text-xl font-bold text-primary truncate px-2">{formatValue(user.motherTongue)}</p>
               <p className="text-xs md:text-sm text-muted-foreground">Language (भाषा)</p>
             </div>
           </CardContent>

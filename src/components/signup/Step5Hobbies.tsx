@@ -92,43 +92,6 @@ const Step5Hobbies = ({ data, onNext, onBack }: StepProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validation
-    if (formData.hobbies.length === 0) {
-      toast({
-        title: "Validation Error",
-        description: "Please select at least one hobby.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (formData.favouriteMusic.length === 0) {
-      toast({
-        title: "Validation Error",
-        description: "Please select at least one music preference.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (formData.sports.length === 0) {
-      toast({
-        title: "Validation Error",
-        description: "Please select at least one sport.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (formData.favouriteFood.length === 0) {
-      toast({
-        title: "Validation Error",
-        description: "Please select at least one food preference.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setSaving(true);
 
     const token = sessionStorage.getItem("token");
@@ -163,7 +126,7 @@ const Step5Hobbies = ({ data, onNext, onBack }: StepProps) => {
         body: JSON.stringify(payload),
       });
       const result = await response.json();
-      if (response.ok) {
+      if (result.statusCode === 201 || result.statusCode === 200) {
         toast({
           title: "Saved",
           description: result.message || "Hobbies details saved.",
@@ -193,7 +156,7 @@ const Step5Hobbies = ({ data, onNext, onBack }: StepProps) => {
       <div className="space-y-6">
         {/* HOBBIES */}
         <div className="space-y-3">
-          <Label>Hobbies (शौक) *</Label>
+          <Label>Hobbies (शौक)</Label>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {hobbiesOptions.map(opt => (
               <div key={opt.value} className="flex items-center space-x-2">
@@ -217,7 +180,7 @@ const Step5Hobbies = ({ data, onNext, onBack }: StepProps) => {
 
         {/* MUSIC */}
         <div className="space-y-3">
-          <Label>Favourite Music (पसंदीदा संगीत) *</Label>
+          <Label>Favourite Music (पसंदीदा संगीत)</Label>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {musicOptions.map(opt => (
               <div key={opt.value} className="flex items-center space-x-2">
@@ -241,7 +204,7 @@ const Step5Hobbies = ({ data, onNext, onBack }: StepProps) => {
 
         {/* SPORTS */}
         <div className="space-y-3">
-          <Label>Sports & Fitness (खेल और फिटनेस) *</Label>
+          <Label>Sports & Fitness (खेल और फिटनेस)</Label>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {sportsOptions.map(opt => (
               <div key={opt.value} className="flex items-center space-x-2">
@@ -265,7 +228,7 @@ const Step5Hobbies = ({ data, onNext, onBack }: StepProps) => {
 
         {/* FOOD */}
         <div className="space-y-3">
-          <Label>Favourite Food (पसंदीदा भोजन) *</Label>
+          <Label>Favourite Food (पसंदीदा भोजन)</Label>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {foodOptions.map(opt => (
               <div key={opt.value} className="flex items-center space-x-2">

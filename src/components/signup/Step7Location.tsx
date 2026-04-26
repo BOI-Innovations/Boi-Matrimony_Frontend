@@ -31,6 +31,7 @@ const Step7Location = ({ data, onNext, onBack, isLastStep }: StepProps) => {
   const [states, setStates] = useState<{ id: number; name: string }[]>([]);
   const [loadingCountries, setLoadingCountries] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [errors, setErrors] = useState<Record<string, boolean>>({});
 
   const [formData, setFormData] = useState({
     city: data.city || "",
@@ -84,6 +85,7 @@ const Step7Location = ({ data, onNext, onBack, isLastStep }: StepProps) => {
       state: "",
       city: "",
     });
+    setErrors((prev) => ({ ...prev, country: false }));
     setStates(selectedCountry?.states || []);
   };
 
@@ -102,6 +104,27 @@ const Step7Location = ({ data, onNext, onBack, isLastStep }: StepProps) => {
       return;
     }
 
+    // Validation
+    const newErrors: Record<string, boolean> = {};
+    if (!formData.country) newErrors.country = true;
+    if (!formData.residencyStatus) newErrors.residencyStatus = true;
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      setSaving(false);
+      toast({
+        title: "Required Fields",
+        description: "Please fill in all required fields highlighted in red.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Filter out empty strings so the backend doesn't receive invalid values for optional enums or fields
+    const payload = Object.fromEntries(
+      Object.entries(formData).filter(([_, value]) => value !== "")
+    );
+
     try {
       const response = await fetch(`${baseUrl}/api/location`, {
         method: "POST",
@@ -109,11 +132,10 @@ const Step7Location = ({ data, onNext, onBack, isLastStep }: StepProps) => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       const result = await response.json();
-      // Handle both 201 (created) and 200 (updated) status codes
       if (response.ok && (result.statusCode === 201 || result.statusCode === 200)) {
         toast({
           title: "Success",
@@ -144,13 +166,22 @@ const Step7Location = ({ data, onNext, onBack, isLastStep }: StepProps) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Country */}
         <div className="space-y-2">
-          <Label htmlFor="country">Country (देश) *</Label>
+          <Label
+            htmlFor="country"
+            className={errors.country ? "text-destructive" : ""}
+          >
+            Country (देश) *
+          </Label>
           <Select
             value={formData.country}
             onValueChange={(value) => handleCountryChange(value)}
             disabled={loadingCountries}
           >
-            <SelectTrigger>
+            <SelectTrigger
+              className={
+                errors.country ? "border-destructive ring-1 ring-destructive" : ""
+              }
+            >
               <SelectValue
                 placeholder={
                   loadingCountries ? "Loading countries..." : "Select country"
@@ -173,7 +204,7 @@ const Step7Location = ({ data, onNext, onBack, isLastStep }: StepProps) => {
         {/* State (conditionally rendered) */}
         {states.length > 0 && (
           <div className="space-y-2">
-            <Label htmlFor="state">State (राज्य) *</Label>
+            <Label htmlFor="state">State (राज्य)</Label>
             <Select
               value={formData.state}
               onValueChange={(value) =>
@@ -196,7 +227,7 @@ const Step7Location = ({ data, onNext, onBack, isLastStep }: StepProps) => {
 
         {/* City */}
         <div className="space-y-2">
-          <Label htmlFor="city">City (शहर) *</Label>
+          <Label htmlFor="city">City (शहर)</Label>
           <Input
             id="city"
             placeholder="e.g., Bangalore"
@@ -204,13 +235,12 @@ const Step7Location = ({ data, onNext, onBack, isLastStep }: StepProps) => {
             onChange={(e) =>
               setFormData({ ...formData, city: e.target.value })
             }
-            required
           />
         </div>
 
         {/* Postal Code */}
         <div className="space-y-2">
-          <Label htmlFor="postalCode">Postal Code (पिन कोड) *</Label>
+          <Label htmlFor="postalCode">Postal Code (पिन कोड)</Label>
           <Input
             id="postalCode"
             placeholder="e.g., 560001"
@@ -218,13 +248,12 @@ const Step7Location = ({ data, onNext, onBack, isLastStep }: StepProps) => {
             onChange={(e) =>
               setFormData({ ...formData, postalCode: e.target.value })
             }
-            required
           />
         </div>
 
         {/* Citizenship */}
         <div className="space-y-2">
-          <Label htmlFor="citizenship">Citizenship (नागरिकता) *</Label>
+          <Label htmlFor="citizenship">Citizenship (नागरिकता)</Label>
           <Select
             value={formData.citizenship}
             onValueChange={(value) =>
@@ -247,14 +276,26 @@ const Step7Location = ({ data, onNext, onBack, isLastStep }: StepProps) => {
 
         {/* Residency Status */}
         <div className="space-y-2">
-          <Label htmlFor="residencyStatus">Residency Status (निवासी स्थिति) *</Label>
+          <Label
+            htmlFor="residencyStatus"
+            className={errors.residencyStatus ? "text-destructive" : ""}
+          >
+            Residency Status (निवासी स्थिति) *
+          </Label>
           <Select
             value={formData.residencyStatus}
-            onValueChange={(value) =>
-              setFormData({ ...formData, residencyStatus: value })
-            }
+            onValueChange={(value) => {
+              setFormData({ ...formData, residencyStatus: value });
+              setErrors((prev) => ({ ...prev, residencyStatus: false }));
+            }}
           >
-            <SelectTrigger>
+            <SelectTrigger
+              className={
+                errors.residencyStatus
+                  ? "border-destructive ring-1 ring-destructive"
+                  : ""
+              }
+            >
               <SelectValue placeholder="Select status" />
             </SelectTrigger>
             <SelectContent>

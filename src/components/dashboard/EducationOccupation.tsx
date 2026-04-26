@@ -39,17 +39,7 @@ interface Country {
 }
 
 const REQUIRED_FIELDS = [
-  "highestEducation",
-  "additionalDegree",
-  "collegeInstitution",
-  "educationInDetail",
   "employedIn",
-  "occupation",
-  "organizationName",
-  "annualIncome",
-  "incomeCurrency",
-  "workCountry",
-  "workCity",
 ];
 
 const FIELD_LABELS: Record<string, string> = {
@@ -217,7 +207,7 @@ const EducationOccupation = () => {
   // Validation helper for College/Institution and Organization Name
   const validateNameField = (value: string, fieldName: string): string | null => {
     if (!value || value.trim() === "") {
-      return `${fieldName} is required.`;
+      return null;
     }
     if (value.length < 3) {
       return `${fieldName} must be at least 3 characters long.`;
@@ -444,7 +434,7 @@ const EducationOccupation = () => {
             {/* Highest Education Dropdown */}
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 p-3 md:p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-smooth">
               <span className="font-medium text-muted-foreground text-sm">
-                Highest Education (उच्चतम शिक्षा) <span className="text-red-500">*</span>
+                Highest Education (उच्चतम शिक्षा)
               </span>
               {editMode ? (
                 <Select
@@ -489,7 +479,7 @@ const EducationOccupation = () => {
             {/* Additional Degree Dropdown */}
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 p-3 md:p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-smooth">
               <span className="font-medium text-muted-foreground text-sm">
-                Additional Degree (अतिरिक्त डिग्री) <span className="text-red-500">*</span>
+                Additional Degree (अतिरिक्त डिग्री)
               </span>
               {editMode ? (
                 <Select
@@ -528,7 +518,7 @@ const EducationOccupation = () => {
             {/* College / Institution */}
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 p-3 md:p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-smooth">
               <span className="font-medium text-muted-foreground text-sm">
-                College / Institution (कॉलेज / संस्थान) <span className="text-red-500">*</span>
+                College / Institution (कॉलेज / संस्थान)
               </span>
               {editMode ? (
                 <Input
@@ -552,7 +542,7 @@ const EducationOccupation = () => {
 
           <div className="mt-6 pt-6 border-t">
             <h3 className="font-semibold mb-3 text-lg">
-              Education Details (in brief) (शिक्षा विवरण) <span className="text-red-500">*</span>
+              Education Details (in brief) (शिक्षा विवरण)
             </h3>
             {editMode ? (
               <textarea
@@ -614,7 +604,7 @@ const EducationOccupation = () => {
             {/* Occupation Dropdown */}
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 p-3 md:p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-smooth">
               <span className="font-medium text-muted-foreground text-sm">
-                Occupation (व्यवसाय) <span className="text-red-500">*</span>
+                Occupation (व्यवसाय)
               </span>
               {editMode ? (
                 <Select
@@ -653,7 +643,7 @@ const EducationOccupation = () => {
             {/* Organization Name */}
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 p-3 md:p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-smooth">
               <span className="font-medium text-muted-foreground text-sm">
-                Organization Name (संस्था का नाम) <span className="text-red-500">*</span>
+                Organization Name (संस्था का नाम)
               </span>
               {editMode ? (
                 <Input
@@ -677,7 +667,7 @@ const EducationOccupation = () => {
             {/* Annual Income Dropdown */}
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 p-3 md:p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-smooth">
               <span className="font-medium text-muted-foreground text-sm">
-                Annual Income (वार्षिक आय) <span className="text-red-500">*</span>
+                Annual Income (वार्षिक आय)
               </span>
               {editMode ? (
                 <Select
@@ -709,7 +699,7 @@ const EducationOccupation = () => {
             {/* Currency Dropdown */}
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 p-3 md:p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-smooth">
               <span className="font-medium text-muted-foreground text-sm">
-                Income Currency (आय मुद्रा) <span className="text-red-500">*</span>
+                Income Currency (आय मुद्रा)
               </span>
               {editMode ? (
                 <Select
@@ -741,7 +731,7 @@ const EducationOccupation = () => {
             {/* Work Country Dropdown */}
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 p-3 md:p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-smooth">
               <span className="font-medium text-muted-foreground text-sm">
-                Work Country (कार्य देश) <span className="text-red-500">*</span>
+                Work Country (कार्य देश)
               </span>
               {editMode ? (
                 <Select
@@ -773,7 +763,7 @@ const EducationOccupation = () => {
             {/* Work City (with validation) */}
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 p-3 md:p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-smooth">
               <span className="font-medium text-muted-foreground text-sm">
-                Work City (कार्य शहर) <span className="text-red-500">*</span>
+                Work City (कार्य शहर)
               </span>
               {editMode ? (
                 <Input

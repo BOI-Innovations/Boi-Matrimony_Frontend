@@ -46,7 +46,7 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
     gothra: data.gothra || "",
     star: data.star || "",
     rashi: data.rashi || "",
-    manglik: data.manglik || "",
+    manglik: data.manglik || null,
     about: data.about || "",
     dietaryHabits: data.dietaryHabits || "",
     drinkingHabits: data.drinkingHabits || "",
@@ -134,7 +134,7 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
   // Validation helper for Place of Birth
   const validatePlaceOfBirth = (value: string): string | null => {
     if (!value || value.trim() === "") {
-      return "Place of Birth is required.";
+      return null; // Not required anymore
     }
     if (value.length < 3) {
       return "Place of Birth must be at least 3 characters long.";
@@ -148,95 +148,84 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
     return null;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // Clear previous validation errors
-    setValidationErrors(new Set());
+  // Validation function
+  const validateForm = (data = formData) => {
+    const errors = new Set<string>();
 
     // Validate First Name
-    const firstNameError = validateNameField(formData.firstName, "First Name");
+    const firstNameError = validateNameField(data.firstName, "First Name");
     if (firstNameError) {
-      setValidationErrors(new Set(["firstName"]));
-      toast({
-        title: "Validation Error",
-        description: firstNameError,
-        variant: "destructive",
-      });
-      return;
+      errors.add("firstName");
     }
 
     // Validate Last Name
-    const lastNameError = validateNameField(formData.lastName, "Last Name");
+    const lastNameError = validateNameField(data.lastName, "Last Name");
     if (lastNameError) {
-      setValidationErrors(new Set(["lastName"]));
-      toast({
-        title: "Validation Error",
-        description: lastNameError,
-        variant: "destructive",
-      });
-      return;
+      errors.add("lastName");
     }
 
     // Validate Place of Birth
-    const placeOfBirthError = validatePlaceOfBirth(formData.placeOfBirth);
+    const placeOfBirthError = validatePlaceOfBirth(data.placeOfBirth);
     if (placeOfBirthError) {
-      setValidationErrors(new Set(["placeOfBirth"]));
-      toast({
-        title: "Validation Error",
-        description: placeOfBirthError,
-        variant: "destructive",
-      });
-      return;
+      errors.add("placeOfBirth");
     }
 
-    // Validation for required fields
+    // Required fields validation
     const requiredFields = [
-      { key: "firstName", label: "First Name" },
-      { key: "lastName", label: "Last Name" },
-      { key: "gender", label: "Gender" },
-      { key: "profileCreatedFor", label: "Profile Created For" },
-      { key: "dateOfBirth", label: "Date of Birth" },
-      { key: "timeOfBirth", label: "Time of Birth" },
-      { key: "placeOfBirth", label: "Place of Birth" },
-      { key: "caste", label: "Caste" },
-      { key: "subCaste", label: "Sub Caste" },
-      { key: "maritalStatus", label: "Marital Status" },
-      { key: "heightIn", label: "Height" },
-      { key: "weight", label: "Weight" },
-      { key: "physicalStatus", label: "Physical Status" },
-      { key: "motherTongue", label: "Mother Tongue" },
-      { key: "gothra", label: "Gothra" },
-      { key: "manglik", label: "Manglik" },
-      { key: "dietaryHabits", label: "Dietary Habits" },
-      { key: "drinkingHabits", label: "Drinking Habits" },
-      { key: "smokingHabits", label: "Smoking Habits" },
+      "firstName", "lastName", "gender", "profileCreatedFor", "dateOfBirth", 
+      "caste", "subCaste", "maritalStatus", "physicalStatus", "gothra", 
+      "dietaryHabits", "drinkingHabits", "smokingHabits"
     ];
 
     for (const field of requiredFields) {
-      if (!formData[field.key as keyof typeof formData]) {
-        toast({
-          title: "Validation Error",
-          description: `${field.label} is required.`,
-          variant: "destructive",
-        });
-        return;
+      if (!data[field as keyof typeof data]) {
+        errors.add(field);
       }
     }
 
-    if (formData.languagesKnown.length === 0) {
-      toast({
-        title: "Validation Error",
-        description: "Languages Known is required.",
-        variant: "destructive",
-      });
-      return;
+    // diseaseDetails required only when hasDisease is true
+    if (data.hasDisease && !data.diseaseDetails) {
+      errors.add("diseaseDetails");
     }
 
-    if (formData.hasDisease && !formData.diseaseDetails) {
+    setValidationErrors(errors);
+    return errors;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Validate form
+    const errors = validateForm();
+    if (errors.size > 0) {
+      const firstErrorField = Array.from(errors)[0];
+      const fieldLabels: Record<string, string> = {
+        firstName: "First Name",
+        lastName: "Last Name", 
+        gender: "Gender",
+        profileCreatedFor: "Profile Created For",
+        dateOfBirth: "Date of Birth",
+        caste: "Caste",
+        subCaste: "Sub Caste",
+        maritalStatus: "Marital Status",
+        physicalStatus: "Physical Status",
+        gothra: "Gothra",
+        dietaryHabits: "Dietary Habits",
+        drinkingHabits: "Drinking Habits",
+        smokingHabits: "Smoking Habits",
+        diseaseDetails: "Disease Details",
+        placeOfBirth: "Place of Birth"
+      };
+      
+      // Scroll to the first error field
+      const errorElement = document.querySelector(`[data-field="${firstErrorField}"]`);
+      if (errorElement) {
+        errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      
       toast({
         title: "Validation Error",
-        description: "Disease Details is required.",
+        description: `${fieldLabels[firstErrorField] || firstErrorField} is required.`,
         variant: "destructive",
       });
       return;
@@ -268,7 +257,11 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
 
     try {
       // ensure religion is always HINDU before sending
-      const payload = { ...formData, religion: "HINDU" };
+      const payload = { 
+        ...formData, 
+        religion: "HINDU",
+        manglik: formData.manglik || null 
+      };
 
       const response = await fetch(`${baseUrl}/api/profiles`, {
         method: "POST",
@@ -279,13 +272,13 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
         body: JSON.stringify(payload),
       });
       const result = await response.json();
-      if (response.ok) {
+      if (result.statusCode === 201 || result.statusCode === 200) {
         toast({
           title: "Profile saved",
           description: "Your basic details have been saved.",
           variant: "default",
         });
-        onNext(payload);
+        onNext(result.payload || payload);
       } else {
         toast({
           title: "Error saving profile",
@@ -323,7 +316,7 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* First Name */}
-        <div className="space-y-2">
+        <div className="space-y-2" data-field="firstName">
           <Label htmlFor="firstName">
             First Name (नाम)
             <span className="text-red-500 ml-1">*</span>
@@ -335,7 +328,11 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
               setFormData({ ...formData, firstName: e.target.value });
               // Clear error when user starts typing
               if (validationErrors.has("firstName")) {
-                setValidationErrors(new Set(Array.from(validationErrors).filter(f => f !== "firstName")));
+                setValidationErrors(prev => {
+                  const newErrors = new Set(prev);
+                  newErrors.delete("firstName");
+                  return newErrors;
+                });
               }
             }}
             className={cn(
@@ -346,7 +343,7 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
         </div>
 
         {/* Last Name */}
-        <div className="space-y-2">
+        <div className="space-y-2" data-field="lastName">
           <Label htmlFor="lastName">
             Last Name (उपनाम)
             <span className="text-red-500 ml-1">*</span>
@@ -358,7 +355,11 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
               setFormData({ ...formData, lastName: e.target.value });
               // Clear error when user starts typing
               if (validationErrors.has("lastName")) {
-                setValidationErrors(new Set(Array.from(validationErrors).filter(f => f !== "lastName")));
+                setValidationErrors(prev => {
+                  const newErrors = new Set(prev);
+                  newErrors.delete("lastName");
+                  return newErrors;
+                });
               }
             }}
             className={cn(
@@ -369,7 +370,7 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
         </div>
 
         {/* Gender */}
-        <div className="space-y-2">
+        <div className="space-y-2" data-field="gender">
           <Label htmlFor="gender">Gender (लिंग) *</Label>
           <Select
             value={formData.gender}
@@ -388,7 +389,7 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
         </div>
 
         {/* Profile Created For (API) */}
-        <div className="space-y-2">
+        <div className="space-y-2" data-field="profileCreatedFor">
           <Label htmlFor="profileCreatedFor">Profile Created For (प्रोफ़ाइल किसके लिए) *</Label>
           <Select
             value={formData.profileCreatedFor}
@@ -419,7 +420,7 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
         </div>
 
         {/* Date of Birth */}
-        <div className="space-y-2">
+        <div className="space-y-2" data-field="dateOfBirth">
           <Label htmlFor="dateOfBirth">Date of Birth (जन्म तिथि) *</Label>
           <Input
             id="dateOfBirth"
@@ -432,22 +433,20 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
         </div>
 
         {/* Time of Birth */}
-        <div className="space-y-2">
-          <Label htmlFor="timeOfBirth">Time of Birth (जन्म समय) *</Label>
+        <div className="space-y-2" data-field="timeOfBirth">
+          <Label htmlFor="timeOfBirth">Time of Birth (जन्म समय)</Label>
           <Input
             id="timeOfBirth"
             type="time"
             value={formData.timeOfBirth}
             onChange={(e) => setFormData({ ...formData, timeOfBirth: e.target.value })}
-            required
           />
         </div>
 
         {/* Place of Birth */}
-        <div className="space-y-2">
+        <div className="space-y-2" data-field="placeOfBirth">
           <Label htmlFor="placeOfBirth">
             Place of Birth (जन्म स्थान)
-            <span className="text-red-500 ml-1">*</span>
           </Label>
           <Input
             id="placeOfBirth"
@@ -456,7 +455,11 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
               setFormData({ ...formData, placeOfBirth: e.target.value });
               // Clear error when user starts typing
               if (validationErrors.has("placeOfBirth")) {
-                setValidationErrors(new Set(Array.from(validationErrors).filter(f => f !== "placeOfBirth")));
+                setValidationErrors(prev => {
+                  const newErrors = new Set(prev);
+                  newErrors.delete("placeOfBirth");
+                  return newErrors;
+                });
               }
             }}
             className={cn(
@@ -467,8 +470,8 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
         </div>
 
         {/* Religion - fixed to Hindu (HINDU sent to backend) */}
-        <div className="space-y-2">
-          <Label htmlFor="religion">Religion (धर्म)</Label>
+        <div className="space-y-2" data-field="religion">
+          <Label htmlFor="religion">Religion (धर्म) <span className="text-red-500 ml-1">*</span></Label>
           <Input
             id="religion"
             value={"Hindu"}
@@ -480,7 +483,7 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
         </div>
 
         {/* Caste (API) */}
-        <div className="space-y-2">
+        <div className="space-y-2" data-field="caste">
           <Label htmlFor="caste">Caste (जाति) *</Label>
           <Select
             value={formData.caste}
@@ -511,7 +514,7 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
         </div>
 
         {/* Sub Caste (API) */}
-        <div className="space-y-2">
+        <div className="space-y-2" data-field="subCaste">
           <Label htmlFor="subCaste">Sub Caste (उप जाति) *</Label>
           <Select
             value={formData.subCaste}
@@ -542,7 +545,7 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
         </div>
 
         {/* Marital Status - updated to backend enum values */}
-        <div className="space-y-2">
+        <div className="space-y-2" data-field="maritalStatus">
           <Label htmlFor="maritalStatus">Marital Status (वैवाहिक स्थिति) *</Label>
           <Select
             value={formData.maritalStatus}
@@ -563,7 +566,7 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
 
         {/* Height (API) */}
         <div className="space-y-2">
-          <Label htmlFor="heightIn">Height (कद) *</Label>
+          <Label htmlFor="heightIn">Height (कद)</Label>
           <Select
             value={formData.heightIn}
             onValueChange={(value) => setFormData({ ...formData, heightIn: value })}
@@ -594,7 +597,7 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
 
         {/* Weight */}
         <div className="space-y-2">
-          <Label htmlFor="weight">Weight (वजन) (kg) *</Label>
+          <Label htmlFor="weight">Weight (वजन) (kg)</Label>
           <Select
             value={formData.weight}
             onValueChange={(value) => setFormData({ ...formData, weight: value })}
@@ -650,7 +653,7 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
 
         {/* Mother Tongue (API) */}
         <div className="space-y-2">
-          <Label htmlFor="motherTongue">Mother Tongue (मातृभाषा) *</Label>
+          <Label htmlFor="motherTongue">Mother Tongue (मातृभाषा)</Label>
           <Select
             value={formData.motherTongue}
             onValueChange={(value) => setFormData({ ...formData, motherTongue: value })}
@@ -681,7 +684,7 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
 
         {/* Languages Known (multi-select using mother-tongues API) */}
         <div className="space-y-2 md:col-span-2">
-          <Label htmlFor="languagesKnown">Languages Known (ज्ञात भाषाएं) *</Label>
+          <Label htmlFor="languagesKnown">Languages Known (ज्ञात भाषाएं)</Label>
 
           <Select
             onOpenChange={(open) => {
@@ -823,9 +826,9 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
 
         {/* Manglik */}
         <div className="space-y-2">
-          <Label htmlFor="manglik">Manglik (मांगलिक) *</Label>
+          <Label htmlFor="manglik">Manglik (मांगलिक)</Label>
           <Select
-            value={formData.manglik}
+            value={formData.manglik ?? ""}
             onValueChange={(value) => setFormData({ ...formData, manglik: value })}
           >
             <SelectTrigger>
@@ -942,7 +945,7 @@ const Step2BasicDetails = ({ data, onNext, onBack }: StepProps) => {
 
       {/* Declaration block */}
       <div className="space-y-4 pt-6 border-t">
-        <h3 className="font-semibold text-lg">Declaration Text (घोषणा पाठ)</h3>
+        <h3 className="font-semibold text-lg">Declaration Text (घोषणा पाठ) <span className="text-red-500">*</span></h3>
 
         <p className="text-muted-foreground leading-relaxed">
           {DECLARATION_TEXT}

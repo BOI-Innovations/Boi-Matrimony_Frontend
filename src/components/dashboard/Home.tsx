@@ -675,7 +675,7 @@ const Home = ({ user, onSectionChange }: HomeProps) => {
 
   const handleCreateProfile = () => {
     setShowCreateProfileModal(false);
-    navigate("/dashboard?section=basic-info");
+    onSectionChange("basic-info");
   };
 
   const filteredProfiles = profiles.filter((profile) => {

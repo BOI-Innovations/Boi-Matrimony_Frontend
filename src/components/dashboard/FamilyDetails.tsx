@@ -37,15 +37,6 @@ const REQUIRED_FIELDS = [
   "familyValue",
   "familyType",
   "familyStatus",
-  "fatherOccupation",
-  "motherOccupation",
-  "grandFatherOccupation",
-  "grandMotherOccupation",
-  "nativePlace",
-  "noOfBrothers",
-  "brothersMarried",
-  "noOfSisters",
-  "sistersMarried",
 ];
 
 const FIELD_LABELS: Record<string, string> = {
